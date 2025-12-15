@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from "bcrypt"
+import crypto from "crypto"
 
 const ownerSchema = mongoose.Schema(
   {
@@ -73,3 +74,22 @@ ownerSchema.pre("save",async function(next){
 ownerSchema.methods.comparePassword=async function(password){
     return await bcrypt.compare(password,this.password);
 }
+
+ownerSchema.methods.generateTemporaryToken= function(){
+
+  const unhashedtoken =crypto.randomBytes(32).toString('hex');
+
+
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(unhashedtoken)
+    .digest('hex');
+
+  const expire=Date.now()+10*60*1000;
+
+  return {unhashedtoken,hashedToken,expire};
+}
+
+const Owner=mongoose.model("Owner",ownerSchema);
+
+export default Owner;

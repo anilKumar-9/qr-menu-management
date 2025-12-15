@@ -7,77 +7,74 @@
 
 ### 1.1 Product Name
 **SmartMenu**  
-(QR-Based Digital Restaurant Menu Management System)
+QR-Based Digital Restaurant Menu Management System
 
 ### 1.2 Product Vision
-To digitize restaurant menus using QR codes, enabling restaurant owners to manage menus dynamically while allowing customers to access menus instantly without installing any application.
+To replace traditional paper menus with a digital, QR-based menu system that allows restaurant owners to manage menus dynamically and enables customers to view menus instantly without installing any application.
 
 ### 1.3 Objective
-Replace traditional paper menus with a scalable, secure, and user-friendly digital menu system built using the MERN stack.
+Build a scalable, secure, and easy-to-use restaurant menu management system using the MERN stack, following clean architecture and industry best practices.
 
 ---
 
 ## 2. Problem Statement
 
-In India, many small and medium restaurants still rely on printed menus, which lead to:
+Many restaurants still use printed menus, leading to:
+- High reprinting costs when prices or items change
+- Hygiene concerns due to shared physical menus
+- Difficulty marking items as unavailable
+- Poor scalability for restaurants with multiple branches
 
-- High reprinting costs when menu items or prices change
-- Poor hygiene due to shared physical menus
-- Difficulty in marking items as unavailable
-- Limited scalability for restaurants with multiple branches
-
-There is a strong need for a **simple, cost-effective, and scalable digital menu solution** that works without customer authentication.
+SmartMenu solves these problems by providing a real-time, QR-based digital menu platform.
 
 ---
 
 ## 3. Target Users
 
 ### 3.1 Primary Users
-- **Restaurant Owners (Admins)**  
-  Manage restaurant profile and menu items.
+**Restaurant Owners / Admins**
+- Manage restaurants and menus
+- Control item pricing and availability
 
 ### 3.2 Secondary Users
-- **Restaurant Customers**  
-  View menus by scanning a QR code (no login required).
+**Customers (Public Users)**
+- View menus by scanning QR codes
+- No login or authentication required
 
 ---
 
 ## 4. User Roles & Permissions
 
-### 4.1 Restaurant Owner (Admin)
-**Permissions**
-- Register and authenticate securely
-- Create and manage restaurant profile
+### 4.1 Owner / Admin
+- Secure authentication (email & password)
+- Create and manage restaurant profiles
+- Create, update, and publish menus
 - Add, update, delete menu items
-- Mark items as available/unavailable
+- Toggle item availability
 - Generate and manage QR codes
 - Access protected admin dashboard
 
-### 4.2 Customer (Public User)
-**Permissions**
+### 4.2 Customer (Public)
 - Scan QR code
 - View restaurant menu
-- Filter menu items by category
-- View price, description, and availability
-
-> Customers have **read-only access** and do not require authentication.
+- Read-only access
 
 ---
 
-## 5. User Journey & Flow
+## 5. User Flow
 
-### 5.1 Admin Flow
+### 5.1 Owner Flow
 1. Owner registers or logs in
-2. Server generates JWT token
-3. Token is stored securely in HTTP-only cookies
+2. JWT access and refresh tokens are issued
+3. Tokens stored in HTTP-only cookies
 4. Owner accesses protected dashboard
-5. Owner manages restaurant and menu
+5. Owner manages restaurants, menus, and items
 6. QR code is generated for customer access
 
 ### 5.2 Customer Flow
 1. Customer scans QR code
-2. Menu URL opens in browser
-3. Backend fetches restaurant menu
+2. Public menu URL opens in browser
+3. Backend fetches restaurant menu data
 4. Menu is displayed instantly
 
 ---
@@ -85,62 +82,41 @@ There is a strong need for a **simple, cost-effective, and scalable digital menu
 ## 6. Functional Requirements
 
 ### 6.1 Authentication
-- Email and password-based authentication
+- Email and password authentication
 - Password hashing using bcrypt
-- JWT-based session management
-- Secure cookie storage
+- JWT-based authentication with refresh tokens
 
 ### 6.2 Authorization
 - Role-based access control (RBAC)
-- Admin-only access for menu modifications
+- Admin-only access for create/update/delete operations
 - Public read-only access for customers
 
 ### 6.3 Restaurant Management
-- Create restaurant profile
+- Create restaurant
 - Update restaurant details
+- Activate or deactivate restaurant
 - Associate restaurant with owner account
 
 ### 6.4 Menu Management
-- Add menu items
-- Update menu items
-- Delete menu items
-- Enable or disable availability
-- Categorize menu items (Veg, Non-Veg, Drinks, etc.)
+- Create menus per restaurant
+- Publish or unpublish menus
+- Add, update, delete menu items
+- Categorize menu items
+- Control item availability
 
 ### 6.5 QR Code System
-- Generate unique QR code per restaurant
-- QR links to public menu page
+- Generate a unique QR code per restaurant
+- QR code links to public menu endpoint
 - QR contains restaurant identifier
-
-### 6.6 Health Check System
-- Expose a public health check endpoint
-- Used for monitoring server availability
-- Returns standardized API response
 
 ---
 
 ## 7. Non-Functional Requirements
 
-### 7.1 Performance
-- API response time < 300ms
-- Optimized MongoDB queries
-- Proper indexing strategy
-
-### 7.2 Security
-- Password hashing
-- JWT verification middleware
-- Protected routes
-- Input validation and sanitization
-
-### 7.3 Scalability
-- Support multiple restaurants
-- Modular backend architecture
-- Easy extension for future features
-
-### 7.4 Reliability
-- Centralized error handling
-- Standardized API responses
-- Graceful failure handling
+- API response time under 300ms
+- Secure token handling
+- Optimized MongoDB queries with indexing
+- Centralized error handling and logging
 
 ---
 
@@ -161,7 +137,7 @@ There is a strong need for a **simple, cost-effective, and scalable digital menu
 - MongoDB
 - Mongoose ODM
 
-### Utilities & Tools
+### Tools & Utilities
 - QR Code Generator
 - dotenv
 - ESLint
@@ -171,9 +147,6 @@ There is a strong need for a **simple, cost-effective, and scalable digital menu
 
 ## 9. API Design (High-Level)
 
-### System
-- GET `/api/health` – Health check endpoint
-
 ### Authentication
 - POST `/api/auth/register`
 - POST `/api/auth/login`
@@ -181,72 +154,158 @@ There is a strong need for a **simple, cost-effective, and scalable digital menu
 
 ### Restaurant
 - POST `/api/restaurants`
-- GET `/api/restaurants/:id`
+- GET `/api/restaurants/:restaurantId`
+- PUT `/api/restaurants/:restaurantId`
 
 ### Menu
-- POST `/api/menu`
-- GET `/api/menu/:restaurantId`
-- PUT `/api/menu/:menuId`
-- DELETE `/api/menu/:menuId`
+- POST `/api/menus`
+- GET `/api/menus/:restaurantId`
+- PUT `/api/menus/:menuId`
+- DELETE `/api/menus/:menuId`
+
+### Menu Items
+- POST `/api/menu-items`
+- PUT `/api/menu-items/:itemId`
+- DELETE `/api/menu-items/:itemId`
 
 ---
 
-## 10. Database Design
+## 10. Database Design & Relationships
 
-### User
-- _id
-- name
-- email
-- password (hashed)
-- role
-
-### Restaurant
-- _id
-- name
-- ownerId
-- address
-- qrCodeUrl
-
-### MenuItem
-- _id
-- restaurantId
-- name
-- price
-- category
-- image
-- isAvailable
+The database is designed using **MongoDB** with proper normalization and clear one-to-many relationships to ensure scalability and maintainability.
 
 ---
+
+### 10.1 User (Owner / Admin)
+
+Represents restaurant owners or administrators who manage restaurants and menus.
+
+#### User Schema
+
+| Field Name                     | Type      | Description |
+|--------------------------------|-----------|-------------|
+| `_id`                          | ObjectId  | Unique user identifier |
+| `ownername`                    | String    | Owner/Admin name |
+| `email`                        | String    | Unique email address |
+| `password`                     | String    | Hashed password |
+| `role`                         | String    | `owner` or `admin` |
+| `isEmailVerified`              | Boolean   | Email verification status |
+| `refreshToken`                 | String    | Stored refresh token |
+| `emailVerificationToken`       | String    | Token for email verification |
+| `emailVerificationExpiry`      | Date      | Verification token expiry |
+| `forgotPasswordToken`          | String    | Password reset token |
+| `forgotPasswordExpiry`         | Date      | Password reset expiry |
+| `createdAt`                    | Date      | Account creation timestamp |
+| `updatedAt`                    | Date      | Last update timestamp |
+
+---
+
+### 10.2 Restaurant
+
+Each restaurant is owned by a single user, and a user can manage multiple restaurants.
+
+#### Restaurant Schema
+
+| Field Name       | Type / Reference        | Description |
+|------------------|-------------------------|-------------|
+| `_id`            | ObjectId                | Unique restaurant identifier |
+| `ownerId`        | ObjectId (ref User)     | Owner of the restaurant |
+| `name`           | String                  | Restaurant name |
+| `address`        | String                  | Physical address |
+| `contactNumber`  | String                  | Contact phone number |
+| `qrCodeUrl`      | String                  | Generated QR code URL |
+| `isActive`       | Boolean                 | Active/inactive status |
+| `createdAt`      | Date                    | Created timestamp |
+| `updatedAt`      | Date                    | Updated timestamp |
+
+---
+
+### 10.3 Menu
+
+Each restaurant can have multiple menus (e.g., Breakfast, Lunch, Dinner).
+
+#### Menu Schema
+
+| Field Name        | Type / Reference            | Description |
+|------------------|-----------------------------|-------------|
+| `_id`            | ObjectId                    | Unique menu identifier |
+| `restaurantId`   | ObjectId (ref Restaurant)   | Associated restaurant |
+| `title`          | String                      | Menu title |
+| `isPublished`    | Boolean                     | Public visibility status |
+| `createdAt`      | Date                        | Created timestamp |
+| `updatedAt`      | Date                        | Updated timestamp |
+
+---
+
+### 10.4 MenuItem
+
+Menu items belong to a specific menu and represent individual food items.
+
+#### MenuItem Schema
+
+| Field Name     | Type / Reference       | Description |
+|---------------|------------------------|-------------|
+| `_id`         | ObjectId               | Unique item identifier |
+| `menuId`      | ObjectId (ref Menu)    | Parent menu |
+| `name`        | String                 | Item name |
+| `description` | String                 | Item description |
+| `price`       | Number                 | Item price |
+| `category`    | String                 | Category (Starters, Main Course, etc.) |
+| `image`       | String                 | Item image URL |
+| `isAvailable` | Boolean                | Availability status |
+| `createdAt`   | Date                   | Created timestamp |
+| `updatedAt`   | Date                   | Updated timestamp |
+
+---
+
+### 10.5 Entity Relationships
+
+```text
+User (Owner/Admin)
+   │ 1-to-many
+   ▼
+Restaurant
+   │ 1-to-many
+   ▼
+Menu
+   │ 1-to-many
+   ▼
+MenuItem
+
+---
+```
 
 ## 11. Constraints & Assumptions
 
 ### Assumptions
-- Each restaurant has one owner
-- Customers have smartphones capable of scanning QR codes
+- One owner can manage multiple restaurants
+- Customers have QR-enabled smartphones
 
 ### Constraints
-- No online ordering or payment processing
-- No third-party authentication (OAuth)
+- No online ordering or payment support
+- No OAuth or third-party authentication
 
 ---
 
-## 12. Future Enhancements (Out of Scope)
-- Online ordering system
-- Payment gateway integration
+## 12. Future Enhancements
+
+- Online ordering and payment integration
 - Multi-language menu support
 - Analytics dashboard
+- Staff role management
 - Customer reviews and ratings
 
 ---
 
 ## 13. Success Metrics
-- Admin can manage menu without developer support
-- Menu loads within 2 seconds after QR scan
-- Secure access to admin dashboard
+
+- Menu loads within **2 seconds** after QR scan
+- Owner can manage menus without developer assistance
+- Secure admin dashboard access
 - Clean and maintainable codebase
 
 ---
 
 ## 14. Conclusion
 
-SmartMenu delivers a real-world, scalable, and secure digital menu solution using the MERN stack while following industry best practices suitable for entry-level full-stack developer roles.
+**SmartMenu** is a scalable and secure **QR-based restaurant menu management system** built using the **MERN stack**, following proper database normalization, role-based access control, and real-world backend architecture principles.
