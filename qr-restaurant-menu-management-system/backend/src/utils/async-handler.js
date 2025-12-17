@@ -1,4 +1,4 @@
-export const asyncHandler=function(requestHandler){
+const asyncHandler=function(requestHandler){
     return function(req,res,next){
         Promise.resolve(requestHandler(req,res,next))
         .catch((err)=>{
@@ -6,3 +6,5 @@ export const asyncHandler=function(requestHandler){
         })
     }
 }
+
+export default  asyncHandler;

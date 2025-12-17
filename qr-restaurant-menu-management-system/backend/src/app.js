@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-
+import cookieParser from "cookie-parser"
 const app=express();
 
 app.use(express.json({limit:"16kb"}));
@@ -15,6 +15,8 @@ app.use(
     methods:["GET","POST","PUT","PATCH","DELETE"]
   }),
 );
+
+app.use(cookieParser())
 
 import logger from './utils/logger.js';
 import morgan from 'morgan';
@@ -39,11 +41,14 @@ app.use(
 
 
 import healthCheckRouter from "./routers/healthcheck.route.js";
+import authRouter from "./routers/auth.route.js";
+
 app.get('/',(req,res)=>{
     res.status(200).json({data:"Welcome to home page without using ApiResponse"});
 })
 
 app.use('/api/health', healthCheckRouter);
 
+app.use('/api/owner',authRouter)
 
 export default app;

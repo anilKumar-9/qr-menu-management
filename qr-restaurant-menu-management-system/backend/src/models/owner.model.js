@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from "bcrypt"
 import crypto from "crypto"
+import jwt from "jsonwebtoken"
 
 const ownerSchema = mongoose.Schema(
   {
@@ -23,8 +24,7 @@ const ownerSchema = mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      minlength: 8,
-      select:false
+      
     },
     role: {
       type: String,
@@ -61,15 +61,14 @@ const ownerSchema = mongoose.Schema(
 );
 
 
-ownerSchema.pre("save",async function(next){
-    if(!this.isModified("password"))
-    {
-        return next();
-    }
+ownerSchema.pre('save', async function () {
+  if (!this.isModified('password')) {
+    return;
+  }
 
-    this.password= await bcrypt.hash(this.password,11);
-    next();
-})
+  this.password = await bcrypt.hash(this.password, 11);
+});
+
 
 ownerSchema.methods.comparePassword=async function(password){
     return await bcrypt.compare(password,this.password);
@@ -89,6 +88,30 @@ ownerSchema.methods.generateTemporaryToken= function(){
 
   return {unhashedtoken,hashedToken,expire};
 }
+
+ownerSchema.methods.generateAccessToken= async function(){
+    return jwt.sign(
+      {
+        id: this._id,
+        ownername: this.ownername,
+        email: this.email,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+    );
+}
+
+ownerSchema.methods.generateRefreshToken = async function () {
+  return jwt.sign(
+    {
+      id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
+  );
+};
+
+
 
 const Owner=mongoose.model("Owner",ownerSchema);
 

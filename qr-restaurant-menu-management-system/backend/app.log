@@ -1,1 +1,12 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/health\",\"status\":\"200\",\"responseTime\":\"5.519\"}","timestamp":"2025-12-16T04:32:47.188Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"500\",\"responseTime\":\"111.156\"}","timestamp":"2025-12-17T05:35:23.161Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"500\",\"responseTime\":\"207.873\"}","timestamp":"2025-12-17T05:35:34.671Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"500\",\"responseTime\":\"164.117\"}","timestamp":"2025-12-17T05:39:08.583Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"500\",\"responseTime\":\"141.427\"}","timestamp":"2025-12-17T05:43:58.706Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"500\",\"responseTime\":\"192.129\"}","timestamp":"2025-12-17T05:46:40.188Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/register\",\"status\":\"200\",\"responseTime\":\"4321.128\"}","timestamp":"2025-12-17T05:48:42.078Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/v1/users/verify-email/ee7603c84efa9e23e4beef87ea9258173994793854cd129f4c3801b5e1bee77d\",\"status\":\"404\",\"responseTime\":\"1.095\"}","timestamp":"2025-12-17T05:49:10.252Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/owner/login\",\"status\":\"200\",\"responseTime\":\"377.533\"}","timestamp":"2025-12-17T05:54:41.964Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/owner/login\",\"status\":\"200\",\"responseTime\":\"362.508\"}","timestamp":"2025-12-17T05:57:10.113Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/owner/register\",\"status\":\"200\",\"responseTime\":\"5291.701\"}","timestamp":"2025-12-17T06:00:49.639Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/api/owner/login\",\"status\":\"200\",\"responseTime\":\"399.122\"}","timestamp":"2025-12-17T06:01:01.196Z"}
