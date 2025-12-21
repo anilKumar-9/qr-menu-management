@@ -24,11 +24,10 @@ const restaurantSchema = mongoose.Schema({
   },
   qrCodeUrl:{
     type:String,
-    required:true,
   },
   isActive:{
     type:Boolean,
-    default:false,
+    default:true,
   }
 },{timestamps:true});
 

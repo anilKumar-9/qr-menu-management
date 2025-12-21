@@ -1,174 +1,316 @@
-# Product Requirements Document (PRD)
-## SmartMenu – QR-Based Restaurant Menu Management System
+
+# QR-Based Restaurant Menu Management System  
+## Product Requirements Document (PRD)
 
 ---
 
-## 1. Product Overview
+## 1. Introduction
 
-### 1.1 Product Name
-**SmartMenu**  
-QR-Based Digital Restaurant Menu Management System
+The **QR-Based Restaurant Menu Management System** is a full-stack web application designed to digitize restaurant menus using QR codes. It enables restaurant owners to manage restaurants, menus, and menu items through authenticated dashboards, while customers can view live menus instantly by scanning a QR code without any authentication.
 
-### 1.2 Product Vision
-To replace traditional paper menus with a digital, QR-based menu system that allows restaurant owners to manage menus dynamically and enables customers to view menus instantly without installing any application.
-
-### 1.3 Objective
-Build a scalable, secure, and easy-to-use restaurant menu management system using the MERN stack, following clean architecture and industry best practices.
+The system follows real-world backend design principles such as **role-based access control**, **public vs private API separation**, **soft deletes**, and **scalable REST architecture**, implemented using the **MERN stack**.
 
 ---
 
-## 2. Problem Statement
+## 2. Business Problem
 
-Many restaurants still use printed menus, leading to:
-- High reprinting costs when prices or items change
-- Hygiene concerns due to shared physical menus
-- Difficulty marking items as unavailable
-- Poor scalability for restaurants with multiple branches
+Traditional printed menus introduce multiple operational issues:
 
-SmartMenu solves these problems by providing a real-time, QR-based digital menu platform.
+- Frequent reprinting due to price or item changes
+- High recurring costs
+- Poor hygiene
+- Lack of flexibility
+- Inconsistent menu availability across tables
 
----
-
-## 3. Target Users
-
-### 3.1 Primary Users
-**Restaurant Owners / Admins**
-- Manage restaurants and menus
-- Control item pricing and availability
-
-### 3.2 Secondary Users
-**Customers (Public Users)**
-- View menus by scanning QR codes
-- No login or authentication required
+Restaurants need a **contactless**, **real-time**, and **easy-to-manage** digital solution that allows menu updates without operational friction.
 
 ---
 
-## 4. User Roles & Permissions
+## 3. Product Goals
 
-### 4.1 Owner / Admin
-- Secure authentication (email & password)
-- Create and manage restaurant profiles
-- Create, update, and publish menus
-- Add, update, delete menu items
-- Toggle item availability
-- Generate and manage QR codes
-- Access protected admin dashboard
-
-### 4.2 Customer (Public)
-- Scan QR code
-- View restaurant menu
-- Read-only access
+- Replace printed menus with QR-based digital menus
+- Allow owners to update menus instantly
+- Ensure zero authentication friction for customers
+- Maintain strong security for owner operations
+- Support future scalability (ordering, payments, analytics)
 
 ---
 
-## 5. User Flow
+## 4. Target Users
 
-### 5.1 Owner Flow
-1. Owner registers or logs in
-2. JWT access and refresh tokens are issued
-3. Tokens stored in HTTP-only cookies
-4. Owner accesses protected dashboard
-5. Owner manages restaurants, menus, and items
-6. QR code is generated for customer access
+### 4.1 Restaurant Owners (Primary Users)
+Owners manage restaurants, menus, and menu items through authenticated APIs.
 
-### 5.2 Customer Flow
-1. Customer scans QR code
-2. Public menu URL opens in browser
-3. Backend fetches restaurant menu data
-4. Menu is displayed instantly
+### 4.2 Restaurant Customers (Secondary Users)
+Customers only consume menu data via QR scan without login or signup.
+
+---
+
+## 5. User Roles & Permissions
+
+### 5.1 Owner (Authenticated Role)
+
+Owners authenticate using JWT tokens and have full control over their own data only.
+
+Permissions:
+- Register and log in
+- Verify email and reset password
+- Create and manage restaurants
+- Generate and download QR codes
+- Create, activate, deactivate menus
+- Publish and unpublish menus
+- Add, update, activate, deactivate menu items
+- Soft delete restaurants, menus, and items
+
+### 5.2 Customer (Public Role)
+
+Customers access the system only via QR scan.
+
+Permissions:
+- View restaurant details
+- View published menus
+- View available menu items
+- No write access
+- No authentication
 
 ---
 
 ## 6. Functional Requirements
 
-### 6.1 Authentication
-- Email and password authentication
-- Password hashing using bcrypt
-- JWT-based authentication with refresh tokens
+### 6.1 Authentication & Authorization
 
-### 6.2 Authorization
-- Role-based access control (RBAC)
-- Admin-only access for create/update/delete operations
-- Public read-only access for customers
+- Email-based registration
+- Email verification workflow
+- JWT-based login
+- Secure logout
+- Password reset using email tokens
+- HTTP-only cookies for token storage
+- Role-based access enforcement
 
-### 6.3 Restaurant Management
+---
+
+### 6.2 Restaurant Management
+
 - Create restaurant
+- Fetch owner-specific restaurants
+- Fetch restaurant by ID
 - Update restaurant details
 - Activate or deactivate restaurant
-- Associate restaurant with owner account
+- Soft delete restaurant
+- Generate and retrieve restaurant QR code
 
-### 6.4 Menu Management
-- Create menus per restaurant
+Each restaurant belongs to **one owner**, enforced at the database level.
+
+---
+
+### 6.3 Menu Management
+
+- Create menus under a restaurant
+- Fetch menus by restaurant
+- Activate or deactivate menus
 - Publish or unpublish menus
-- Add, update, delete menu items
-- Categorize menu items
-- Control item availability
 
-### 6.5 QR Code System
-- Generate a unique QR code per restaurant
-- QR code links to public menu endpoint
-- QR contains restaurant identifier
+Only **active and published menus** are visible publicly.
 
 ---
 
-## 7. Non-Functional Requirements
+### 6.4 Menu Item Management
 
-- API response time under 300ms
-- Secure token handling
-- Optimized MongoDB queries with indexing
-- Centralized error handling and logging
+- Add menu items to menus
+- Update menu item details
+- Toggle item availability
+- Soft delete items instead of permanent deletion
+
+Only **available items** appear in public views.
 
 ---
 
-## 8. Technology Stack
+### 6.5 Public Menu Access (QR Flow)
+
+- QR scan redirects to frontend route `/menu/:restaurantId`
+- Frontend calls public backend API
+- Backend returns:
+  - Restaurant details
+  - Published menus only
+  - Available menu items only
+- No sensitive fields exposed
+
+---
+
+## 7. High-Level System Design
+
+This section describes the overall architecture, backend layering, API access separation, and QR-based data flow of the system.
+
+---
+
+### 7.1 Architecture Overview
+
+The system utilizes a modern web architecture that separates administrative actions (Owner) from consumer actions (Customer) through a central API Gateway.
+
+
+
+* **Owner Dashboard (Authenticated):** Managed via an Express.js API Gateway, feeding into the Business Logic Layer and MongoDB.
+* **Customer (QR Scan):** Accesses a specific frontend route (`/menu/:restaurantId`) which interacts with a specialized Public API Layer.
+
+---
+
+### 7.2 Backend Layered Architecture
+
+To ensure maintainability and scalability, the backend follows a strict separation of concerns:
+
+**Data Flow:**
+`Routes` → `Controllers` → `Services (Business Logic)` → `Models (Mongoose)` → `Database`
+
+| Layer | Responsibility |
+| :--- | :--- |
+| **Routes** | API entry points and URL definition. |
+| **Controllers** | Request handling, input extraction, and response formatting. |
+| **Services** | Core business logic, complex validations, and system rules. |
+| **Models** | Database schemas and direct Mongoose query operations. |
+
+---
+
+### 7.3 Public vs Private API Separation
+
+Security is maintained by strictly isolating administrative functions from public-facing menu data.
+
+| API Type | Access | Purpose |
+| :--- | :--- | :--- |
+| **Private APIs** | JWT Required | Owner operations (Editing menus, settings, analytics). |
+| **Public APIs** | No Auth | QR-based menu access for customers. |
+
+> **Note:** Private APIs are protected using authentication and ownership checks, while Public APIs are read-only and strictly filtered to prevent data leakage.
+
+---
+
+### 7.4 QR Code System Design
+
+The system uses a persistent QR code strategy to link physical tables to the digital menu.
+
+* **Single Source:** Each restaurant has a single, unique QR code.
+* **Static Generation:** QR is generated once upon restaurant creation.
+* **Frontend-Centric:** The QR contains the **Frontend URL** only; Backend URLs are never exposed to the end-user.
+* **Data Integrity:** Public APIs return only "Published" menus and available items.
+
+#### QR Flow
+1.  **Creation:** Owner creates a restaurant profile.
+2.  **Generation:** Backend generates a QR code containing the unique Frontend URL.
+3.  **Storage:** The QR code (or its link) is stored in the restaurant document.
+4.  **Discovery:** Customer scans the QR code.
+5.  **Retrieval:** Frontend extracts the `restaurantId` from the URL.
+6.  **Display:** Frontend calls the public API; Backend returns the filtered menu data.
+
+## 8. System Architecture
+
+### 8.1 High-Level Architecture
+
+```text
+Owner Dashboard (Authenticated)
+        |
+        v
+Backend (Protected APIs)
+        |
+        v
+MongoDB database
+        |
+        v
+Customer (QR Scan)
+        |
+        v
+Frontend (/menu/:restaurantId)
+        |
+        v
+Backend (Public APIs)
+
+```
+
+
+
+## 8.2 Technology Stack
 
 ### Frontend
-- React.js
-- Axios
-- React Router DOM
+- **React.js** – Component-based UI development
+- **Axios** – HTTP client for API communication
+- **React Router DOM** – Client-side routing for public and protected routes
 
 ### Backend
-- Node.js
-- Express.js
-- JWT Authentication
-- bcrypt
+- **Node.js** – JavaScript runtime environment
+- **Express.js** – REST API framework
+- **MongoDB** – NoSQL database for scalable data storage
+- **Mongoose** – Object Data Modeling (ODM) for MongoDB
+- **JWT Authentication** – Secure stateless authentication
+- **bcrypt** – Password hashing and security
+- **Express Validator** – Request validation and sanitization
+- **QRCode** – QR code generation for restaurants
+- **Nodemailer** – Email verification and password reset
 
 ### Database
-- MongoDB
-- Mongoose ODM
+- **MongoDB** – NoSQL database for flexible and scalable data storage
+- **Mongoose ODM** – Schema-based data modeling and validation layer for MongoDB
 
 ### Tools & Utilities
-- QR Code Generator
-- dotenv
-- ESLint
-- Prettier
+- **QR Code Generator** – Generates QR codes containing frontend URLs for restaurants
+- **dotenv** – Environment variable management
+- **ESLint** – Static code analysis for maintaining code quality
+- **Prettier** – Automated code formatting for consistency
+
 
 ---
 
 ## 9. API Design (High-Level)
 
 ### Authentication
-- POST `/api/auth/register`
-- POST `/api/auth/login`
-- POST `/api/auth/logout`
+## Authentication APIs
+
+```text
+POST   /api/v1/users/register
+POST   /api/v1/users/login
+POST   /api/v1/users/logout
+GET    /api/v1/users/me
+GET    /api/v1/users/verify-email/:token
+POST   /api/v1/users/resend-verification
+POST   /api/v1/users/forgot-password
+POST   /api/v1/users/reset-password/:token
+POST   /api/v1/users/refresh-token
+PATCH  /api/v1/users/change-password
+```
 
 ### Restaurant
-- POST `/api/restaurants`
-- GET `/api/restaurants/:restaurantId`
-- PUT `/api/restaurants/:restaurantId`
+```text
+POST   /api/v1/restaurants
+GET    /api/v1/restaurants
+GET    /api/v1/restaurants/:restaurantId
+PATCH  /api/v1/restaurants/:restaurantId
+PATCH  /api/v1/restaurants/:restaurantId/activate
+PATCH  /api/v1/restaurants/:restaurantId/delete
+GET    /api/v1/restaurants/:restaurantId/qr
+```
 
 ### Menu
-- POST `/api/menus`
-- GET `/api/menus/:restaurantId`
-- PUT `/api/menus/:menuId`
-- DELETE `/api/menus/:menuId`
-
+```text
+POST   /api/v1/menus/:restaurantId
+GET    /api/v1/menus/:restaurantId
+PATCH  /api/v1/menus/:menuId/activate
+PATCH  /api/v1/menus/:menuId/deactivate
+PATCH  /api/v1/menus/:menuId/publish
+PATCH  /api/v1/menus/:menuId/unpublish
+```
 ### Menu Items
-- POST `/api/menu-items`
-- PUT `/api/menu-items/:itemId`
-- DELETE `/api/menu-items/:itemId`
+```text
+POST   /api/v1/menu-items/menu/:menuId
+GET    /api/v1/menu-items/menu/:menuId
+PATCH  /api/v1/menu-items/:itemId
+PATCH  /api/v1/menu-items/:itemId/toggle
 
----
+```
+### public Api
+```text
+ GET    /api/v1/public/menu/:restaurantId
+```
+### health-check Api
+```text
+GET    /api/v1/health
+```
 
 ## 10. Database Design & Relationships
 
@@ -275,37 +417,53 @@ MenuItem
 ---
 ```
 
-## 11. Constraints & Assumptions
+---
 
-### Assumptions
-- One owner can manage multiple restaurants
-- Customers have QR-enabled smartphones
+## 12. Key Design Decisions
 
-### Constraints
-- No online ordering or payment support
-- No OAuth or third-party authentication
+The system architecture is built on a "strict-hierarchy" model to ensure data integrity and ease of management.
+
+
+
+* **Hierarchical Scaling:**
+    * **One owner → many restaurants:** Allows business groups to manage multiple locations from one account.
+    * **One restaurant → many menus:** Supports time-based menus (e.g., "Breakfast Menu", "Happy Hour").
+    * **One menu → many items:** Granular control over specific food entries.
+* **Data Persistence Strategy:** * **Soft Deletes:** Instead of `REMOVING` data, we use boolean flags (`isDeleted: true`). This prevents broken links if a customer scans an old QR code and allows for data recovery.
+* **Performance Optimization:** * **Indexed Foreign Keys:** MongoDB indexes are applied to `ownerId`, `restaurantId`, and `menuId` to ensure sub-second query speeds even as the database grows.
 
 ---
 
-## 12. Future Enhancements
+## 13. Security Design
 
-- Online ordering and payment integration
-- Multi-language menu support
-- Analytics dashboard
-- Staff role management
-- Customer reviews and ratings
+A "Security-First" approach is applied to separate administrative power from public access.
 
----
 
-## 13. Success Metrics
 
-- Menu loads within **2 seconds** after QR scan
-- Owner can manage menus without developer assistance
-- Secure admin dashboard access
-- Clean and maintainable codebase
+| Feature | Implementation |
+| :--- | :--- |
+| **Authentication** | Stateless **JWT (JSON Web Tokens)** for session management. |
+| **Storage** | **HTTP-Only Cookies** to prevent Cross-Site Scripting (XSS) attacks. |
+| **Authorization** | **Role-Based Access Control (RBAC)** ensures only owners can edit their specific restaurants. |
+| **Query Validation** | Middleware enforces that `req.user.id` matches the `ownerId` of the resource being accessed. |
+| **Public Safety** | Public APIs are **Read-Only** and strictly filtered to exclude sensitive fields (e.g., owner emails, internal IDs). |
 
 ---
 
-## 14. Conclusion
+## 14. Extendability & Future Roadmap
 
-**SmartMenu** is a scalable and secure **QR-based restaurant menu management system** built using the **MERN stack**, following proper database normalization, role-based access control, and real-world backend architecture principles.
+The system is designed with a "Plug-and-Play" architecture, allowing for seamless integration of future modules:
+
+1.  **Phase 1 (Current):** Digital menu browsing and QR management.
+2.  **Phase 2 (Ordering):** Real-time cart system and "Order to Table" functionality.
+3.  **Phase 3 (Payments):** Integration with **Stripe** or **Razorpay** for contactless checkout.
+4.  **Phase 4 (Insights):** Analytics dashboard showing most-viewed items and peak scan times.
+5.  **Phase 5 (Localization):** Multi-language menu support for international tourists.
+
+---
+
+## 15. Summary
+
+The **SmartMenu** system represents a production-grade backend architecture. By balancing **security** (JWT/Ownership checks) with **user experience** (Public Read-Only APIs/QR Flow), the platform provides a scalable solution for the modern hospitality industry. It demonstrates a deep understanding of RESTful principles, database normalization, and robust error handling.
+
+---
