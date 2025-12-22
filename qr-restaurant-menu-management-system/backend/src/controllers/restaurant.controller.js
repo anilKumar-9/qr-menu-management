@@ -21,7 +21,7 @@ const createRestaurant = asyncHandler(async (req,res)=>{
         name,
         address,
         contactNumber,
-        is
+        isActive:true
     })
     const qrCode = await generateRestaurantQR(createdRestaurant._id.toString());
     createdRestaurant.qrCode = qrCode;

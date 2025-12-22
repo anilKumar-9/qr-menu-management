@@ -49,7 +49,7 @@ import publicRouter from "./routers/public.route.js";
 import qrRouter from "./routers/qr.route.js";
 
 app.get('/',(req,res)=>{
-    res.status(200).json({data:"Welcome to home page without using ApiResponse"});
+    res.status(200).json({data:"Welcome to home page"});
 })
 
 app.use('/api/v1/health', healthCheckRouter);
