@@ -8,15 +8,12 @@ export default function PublicMenu() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("🚀 PublicMenu mounted, id:", restaurantId);
-
     async function fetchMenu() {
       try {
         const res = await getPublicMenu(restaurantId);
-        console.log("✅ backend response:", res.data);
         setData(res.data.data);
       } catch (err) {
-        console.error("❌ API error", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -32,29 +29,19 @@ export default function PublicMenu() {
     <div style={{ padding: "16px" }}>
       <h1>{data.restaurant.name}</h1>
 
-      {data.menus.length === 0 && <p>No menus</p>}
+      {data.menus.map((menu) => (
+        <div key={menu._id}>
+          <h2>{menu.title}</h2>
 
-      {data.menus.map((menu) => {
-        const menuItems = data.items.filter(
-          (item) => item.menuId.toString() === menu._id.toString()
-        );
-
-        return (
-          <div key={menu._id}>
-            <h2>{menu.title}</h2>
-
-            {menuItems.length === 0 ? (
-              <p>No items</p>
-            ) : (
-              menuItems.map((item) => (
-                <p key={item._id}>
-                  {item.name} – ₹{item.price}
-                </p>
-              ))
-            )}
-          </div>
-        );
-      })}
+          {data.items
+            .filter((item) => item.menuId === menu._id)
+            .map((item) => (
+              <p key={item._id}>
+                {item.name} – ₹{item.price}
+              </p>
+            ))}
+        </div>
+      ))}
     </div>
   );
 }
