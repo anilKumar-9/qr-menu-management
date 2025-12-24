@@ -148,7 +148,9 @@ export default function Home() {
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          
           <Link to="/" className="flex items-center gap-3 group">
+          
             <div className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded group-hover:rotate-12 transition-transform">
               Q
             </div>
@@ -156,17 +158,21 @@ export default function Home() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-            {["Features", "How it works", "Benefits", "Architecture"].map(
-              (item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="hover:text-black transition-colors"
-                >
-                  {item}
-                </a>
-              )
-            )}
+            {[
+              "Demo",
+              "Features",
+              "How it works",
+              "Benefits",
+              "Architecture",
+            ].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                className="hover:text-black transition-colors"
+              >
+                {item}
+              </a>
+            ))}
           </nav>
 
           <div className="flex items-center gap-4 text-sm font-medium">
@@ -268,7 +274,10 @@ export default function Home() {
         </section>
 
         {/* QR DEMO SECTION */}
-        <section className="py-24 bg-gradient-to-br from-gray-50 to-white">
+        <section
+          id="demo"
+          className="h-screen flex items-center bg-gradient-to-br from-gray-50 to-white"
+        >
           <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
               <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
@@ -322,11 +331,13 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* FEATURES */}
-        <section id="features" className="py-32 bg-white">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-4">
+        {/* --- FEATURES SECTION --- */}
+        <section
+          id="features"
+          className="min-h-screen flex items-center bg-white pt-20"
+        >
+          <div className="max-w-6xl mx-auto px-4 w-full py-8">
+            <div className="text-center mb-4 space-y-1">
               <h2 className="text-4xl font-bold tracking-tight">
                 Full-Stack Control
               </h2>
@@ -334,7 +345,7 @@ export default function Home() {
                 Everything you need to run a digital-first restaurant.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {FEATURES.map((f, i) => (
                 <FeatureCard key={i} {...f} index={i} />
               ))}
@@ -342,19 +353,30 @@ export default function Home() {
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
+        {/* --- HOW IT WORKS SECTION --- */}
         <section
           id="how-it-works"
-          className="bg-gradient-to-br from-gray-50 to-white py-32"
+          className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-24"
         >
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-4xl font-bold text-center mb-4 tracking-tight">
-              Simple Setup
-            </h2>
-            <p className="text-center text-gray-500 mb-20 text-lg">
-              Get your restaurant online in minutes, not days
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Background decorative blur */}
+          <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-black/5 blur-3xl" />
+          <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-black/5 blur-3xl" />
+
+          <div className="relative max-w-6xl mx-auto px-6 w-full py-16">
+            {/* Header */}
+            <div className="text-center max-w-2xl mx-auto mb-20">
+              
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+                Simple Setup
+              </h2>
+
+              <p className="mt-4 text-lg text-gray-700">
+                Get your restaurant online in minutes, not days
+              </p>
+            </div>
+
+            {/* Steps */}
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((s, i) => (
                 <StepCard key={s.id} {...s} index={i} />
               ))}
@@ -398,9 +420,12 @@ export default function Home() {
         </section>
 
         {/* TECH STACK */}
-        <section id="architecture" className="py-32 bg-gray-900 text-white">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-4">
+        <section
+          id="architecture"
+          className="min-h-screen flex items-center bg-gray-900 text-white scroll-mt-20"
+        >
+          <div className="max-w-6xl mx-auto px-6 w-full py-20">
+            <div className="text-center mb-16 space-y-4">
               <h2 className="text-4xl font-bold tracking-tight">
                 Built with Modern Technology
               </h2>
@@ -408,6 +433,7 @@ export default function Home() {
                 Enterprise-grade architecture for reliability and performance
               </p>
             </div>
+
             <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
               {TECH_STACK.map((tech, i) => (
                 <motion.div
@@ -428,7 +454,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* FAQ SECTION */}
         <section className="py-32 bg-white">
           <div className="max-w-4xl mx-auto px-6">

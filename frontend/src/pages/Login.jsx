@@ -3,8 +3,7 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginOwner } from "../api/public.api";
-// import { loginOwner } from "../api/auth.api";
+import { loginOwner } from "../api/auth.api.js";
 
 export default function OwnerLogin() {
   const navigate = useNavigate();
@@ -22,18 +21,14 @@ export default function OwnerLogin() {
     setLoading(true);
 
     try {
-      // 🔗 CONNECT BACKEND HERE
-       const res = await loginOwner(data);
+      await loginOwner({
+        email: data.email,
+        password: data.password,
+      });
 
-      console.log("Login Payload:", data);
-
-      // Mock API delay
-      await new Promise((r) => setTimeout(r, 1200));
-
-      // After login → check onboarding
       navigate("/dashboard");
     } catch (err) {
-      setApiError("Invalid email or password");
+      setApiError(err?.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -46,118 +41,60 @@ export default function OwnerLogin() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8"
       >
-        {/* HEADER */}
+        {/* Header */}
         <div className="mb-8 text-center">
           <div className="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center font-bold text-xl mx-auto mb-4">
             Q
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight">
-            Owner Login
-          </h1>
-          <p className="text-gray-500 text-sm mt-2">
-            Access your restaurant dashboard
-          </p>
+          <h1 className="text-2xl font-extrabold">Owner Login</h1>
+          <p className="text-gray-500 text-sm mt-2">Access your dashboard</p>
         </div>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* EMAIL */}
           <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Email Address
-            </label>
+            <label className="text-sm font-semibold">Email</label>
             <div className="relative mt-2">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Invalid email format",
-                  },
-                })}
-                placeholder="owner@email.com"
-                className={`w-full pl-12 pr-4 py-3 rounded-xl border ${
-                  errors.email ? "border-red-500" : "border-gray-200"
-                } focus:outline-none focus:ring-4 focus:ring-black/5`}
+                {...register("email", { required: "Email is required" })}
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200"
               />
             </div>
-            {errors.email && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.email.message}
-              </p>
-            )}
           </div>
 
-          {/* PASSWORD */}
           <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Password
-            </label>
+            <label className="text-sm font-semibold">Password</label>
             <div className="relative mt-2">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-                placeholder="••••••••"
-                className={`w-full pl-12 pr-4 py-3 rounded-xl border ${
-                  errors.password ? "border-red-500" : "border-gray-200"
-                } focus:outline-none focus:ring-4 focus:ring-black/5`}
+                {...register("password", { required: "Password is required" })}
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200"
               />
             </div>
-            {errors.password && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.password.message}
-              </p>
-            )}
           </div>
 
-          {/* API ERROR */}
           {apiError && (
             <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">
               {apiError}
             </p>
           )}
 
-          {/* SUBMIT */}
           <button
             disabled={loading}
-            type="submit"
-            className="w-full bg-black text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition disabled:bg-gray-400"
+            className="w-full bg-black text-white py-3 rounded-xl font-bold flex justify-center gap-2"
           >
-            {loading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <>
-                Login <ArrowRight className="w-5 h-5" />
-              </>
-            )}
+            {loading ? <Loader2 className="animate-spin" /> : "Login"}
           </button>
         </form>
 
-        {/* FOOTER */}
-        <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
-          <p>
-            Don’t have an account?{" "}
-            <Link
-              to="/register"
-              className="font-semibold text-black hover:underline"
-            >
-              Register
-            </Link>
-          </p>
-          <p>
-            <Link
-              to="/forgot-password"
-              className="hover:underline text-gray-600"
-            >
-              Forgot password?
-            </Link>
-          </p>
-        </div>
+        <p className="text-sm text-center mt-6">
+          Don’t have an account?{" "}
+          <Link to="/register" className="font-semibold text-black">
+            Register
+          </Link>
+        </p>
       </motion.div>
     </div>
   );
