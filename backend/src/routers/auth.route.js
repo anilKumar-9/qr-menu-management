@@ -45,7 +45,7 @@ authRouter.post(
 
 //secure routes which checks access token first
 
-authRouter.get("/user",accessTokenVerify,getUser)
+authRouter.get("/me",accessTokenVerify,getUser)
 
 authRouter.post('/logout', accessTokenVerify, logout);
 
