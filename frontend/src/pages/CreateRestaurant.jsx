@@ -21,10 +21,11 @@ export default function CreateRestaurant() {
 
     try {
       await createRestaurant({
-        name: data.name,
-        address: data.address,
-        phone: data.phone,
+        name: data.name.trim(),
+        address: data.address.trim(),
+        contactNumber: data.contactNumber.trim(),
       });
+
 
       // ✅ success → go back to dashboard
       navigate("/dashboard");
