@@ -34,18 +34,14 @@ export default function RestaurantCard({ restaurant }) {
 
     const pdf = new jsPDF("p", "mm", "a4");
 
-    // Title
     pdf.setFontSize(18);
     pdf.text(restaurant.name, 105, 20, { align: "center" });
 
-    // Subtitle
     pdf.setFontSize(11);
     pdf.text("Scan to view digital menu", 105, 28, { align: "center" });
 
-    // QR Image
     pdf.addImage(qr, "PNG", 55, 40, 100, 100);
 
-    // Footer
     pdf.setFontSize(10);
     pdf.text(`Generated on: ${new Date().toLocaleString()}`, 105, 150, {
       align: "center",
@@ -79,6 +75,7 @@ export default function RestaurantCard({ restaurant }) {
 
       <div className="mt-4 space-y-2">
         <div className="flex gap-2">
+          {/* Restaurant Settings */}
           <button
             onClick={() => navigate(`/restaurant/${restaurant._id}`)}
             className="flex-1 border rounded-xl py-2 text-sm"
@@ -86,11 +83,14 @@ export default function RestaurantCard({ restaurant }) {
             Manage
           </button>
 
+          {/* ✅ CREATE MENU (OWNER FLOW) */}
           <button
-            onClick={() => navigate(`/menu/${restaurant._id}`)}
+            onClick={() =>
+              navigate(`/manage/restaurant/${restaurant._id}/menu/create`)
+            }
             className="flex-1 bg-black text-white rounded-xl py-2 text-sm"
           >
-            Menu
+            Create Menu
           </button>
         </div>
 

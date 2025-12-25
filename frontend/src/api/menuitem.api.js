@@ -1,6 +1,6 @@
-import api from "../utils/axios";
+import instance from "../../utils/axios";
 
 export const createMenuItem = (menuId, data) =>
-  api.post(`/menu-items/menu/${menuId}`, data);
+  instance.post(`/menu-items/menu/${menuId}`, data);
 
-export const getMenuItems = (menuId) => api.get(`/menu-items/menu/${menuId}`);
+export const getMenuItems = (menuId) => instance.get(`/menu-items/menu/${menuId}`);

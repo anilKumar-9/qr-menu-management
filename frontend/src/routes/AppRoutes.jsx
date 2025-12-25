@@ -6,6 +6,8 @@ import OwnerLogin from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute"; 
 import CreateRestaurant from "../pages/CreateRestaurant";
+import CreateMenu from "../pages/CreateMenu";
+
 
 export default function App() {
   return (
@@ -29,7 +31,13 @@ export default function App() {
             <ProtectedRoute>
               <CreateRestaurant />
             </ProtectedRoute>
-          }/>
+          }
+        />
+        <Route
+          path="/manage/restaurant/:restaurantId/menu/create"
+          element={<CreateMenu />}
+        />
+        ;
       </Routes>
     </BrowserRouter>
   );
