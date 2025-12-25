@@ -5,7 +5,7 @@ import OwnerRegister from "../pages/Owner";
 import OwnerLogin from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute"; 
-
+import CreateRestaurant from "./pages/CreateRestaurant";
 
 export default function App() {
   return (
@@ -20,6 +20,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-restaurant"
+          element={
+            <ProtectedRoute>
+              <CreateRestaurant />
             </ProtectedRoute>
           }
         />
