@@ -1,114 +1,100 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createRestaurant } from "../api/restaurant.api";
-import { Loader2 } from "lucide-react";
+import { Download } from "lucide-react";
+import jsPDF from "jspdf";
 
-export default function CreateRestaurant() {
+import { getRestaurantQR } from "../api/restaurant.api";
+
+export default function RestaurantCard({ restaurant }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState("");
+  const [qr, setQr] = useState("");
+  const [loadingQR, setLoadingQR] = useState(true);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  useEffect(() => {
+    if (!restaurant?._id) return;
 
-  const onSubmit = async (data) => {
-    setApiError("");
-    setLoading(true);
-
-    try {
-      await createRestaurant({
-        name: data.name.trim(),
-        address: data.address.trim(),
-        contactNumber: data.contactNumber.trim(),
-      });
-
-      navigate("/dashboard");
-    } catch (err) {
-      setApiError(
-        err?.response?.data?.message || "Failed to create restaurant"
-      );
-    } finally {
-      setLoading(false);
+    async function fetchQR() {
+      try {
+        const res = await getRestaurantQR(restaurant._id);
+        setQr(res.data.data.qrCode);
+      } catch (err) {
+        console.error("Failed to load QR", err);
+      } finally {
+        setLoadingQR(false);
+      }
     }
+
+    fetchQR();
+  }, [restaurant?._id]);
+
+  // ✅ DOWNLOAD QR AS PDF
+  const downloadQRAsPDF = () => {
+    if (!qr) return;
+
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    pdf.setFontSize(18);
+    pdf.text(restaurant.name, 105, 20, { align: "center" });
+
+    pdf.setFontSize(12);
+    pdf.text("Scan to view menu", 105, 30, { align: "center" });
+
+    pdf.addImage(qr, "PNG", 55, 40, 100, 100);
+
+    pdf.setFontSize(10);
+    pdf.text(`Generated on ${new Date().toLocaleString()}`, 105, 150, {
+      align: "center",
+    });
+
+    pdf.save(`${restaurant.name}-QR.pdf`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-lg bg-white p-8 rounded-3xl shadow">
-        <h1 className="text-2xl font-bold mb-2">Create Restaurant</h1>
-        <p className="text-gray-500 mb-6">
-          Add your restaurant details to get started
-        </p>
+    <div className="bg-white p-6 rounded-2xl shadow">
+      <h3 className="text-lg font-bold">{restaurant.name}</h3>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Name */}
-          <div>
-            <label className="text-sm font-semibold">Restaurant Name</label>
-            <input
-              {...register("name", { required: "Name is required" })}
-              className="w-full mt-2 px-4 py-3 border rounded-xl"
-              placeholder="My Restaurant"
-            />
-            {errors.name && (
-              <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>
-            )}
-          </div>
+      <p className="text-sm text-gray-500 mt-1">
+        Status:{" "}
+        <span
+          className={restaurant.isActive ? "text-green-600" : "text-red-500"}
+        >
+          {restaurant.isActive ? "Active" : "Inactive"}
+        </span>
+      </p>
 
-          {/* Address */}
-          <div>
-            <label className="text-sm font-semibold">Address</label>
-            <input
-              {...register("address", { required: "Address is required" })}
-              className="w-full mt-2 px-4 py-3 border rounded-xl"
-              placeholder="Hyderabad"
-            />
-            {errors.address && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.address.message}
-              </p>
-            )}
-          </div>
+      <div className="h-40 flex items-center justify-center mt-4 bg-gray-50 rounded-xl">
+        {loadingQR ? (
+          <p className="text-xs text-gray-400">Loading QR...</p>
+        ) : (
+          qr && <img src={qr} alt="QR" className="w-32 h-32" />
+        )}
+      </div>
 
-          {/* Contact Number */}
-          <div>
-            <label className="text-sm font-semibold">Contact Number</label>
-            <input
-              {...register("contactNumber", {
-                required: "Contact number is required",
-                minLength: { value: 10, message: "Must be 10 digits" },
-                maxLength: { value: 10, message: "Must be 10 digits" },
-              })}
-              className="w-full mt-2 px-4 py-3 border rounded-xl"
-              placeholder="9876543210"
-            />
-            {errors.contactNumber && (
-              <p className="text-xs text-red-500 mt-1">
-                {errors.contactNumber.message}
-              </p>
-            )}
-          </div>
-
-          {apiError && (
-            <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">
-              {apiError}
-            </p>
-          )}
-
+      <div className="mt-4 space-y-2">
+        <div className="flex gap-2">
           <button
-            disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl font-bold flex justify-center gap-2"
+            onClick={() => navigate(`/restaurant/${restaurant._id}`)}
+            className="flex-1 border rounded-xl py-2"
           >
-            {loading ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Create Restaurant"
-            )}
+            Manage
           </button>
-        </form>
+          <button
+            onClick={() => navigate(`/menu/${restaurant._id}`)}
+            className="flex-1 bg-black text-white rounded-xl py-2"
+          >
+            Menu
+          </button>
+        </div>
+
+        {qr && (
+          <button
+            onClick={downloadQRAsPDF}
+            className="w-full flex items-center justify-center gap-2 border rounded-xl py-2"
+          >
+            <Download size={16} />
+            Download QR (PDF)
+          </button>
+        )}
       </div>
     </div>
   );

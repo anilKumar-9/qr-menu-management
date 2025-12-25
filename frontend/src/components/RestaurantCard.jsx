@@ -1,13 +1,10 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
-// API Imports (Ensure these paths match your folder structure)
-import { getMe, logoutOwner } from "../api/auth.api";
-import { getRestaurants, getRestaurantQR } from "../api/restaurant.api";
+import jsPDF from "jspdf";
+import { getRestaurantQR } from "../api/restaurant.api";
 
-/**
- * CHILD COMPONENT: RestaurantCard
- * Handles individual restaurant display and QR logic
- */
-function RestaurantCard({ restaurant }) {
+export default function RestaurantCard({ restaurant }) {
   const navigate = useNavigate();
   const [qr, setQr] = useState("");
   const [loadingQR, setLoadingQR] = useState(true);
@@ -20,49 +17,62 @@ function RestaurantCard({ restaurant }) {
         const res = await getRestaurantQR(restaurant._id);
         setQr(res.data.data.qrCode);
       } catch (err) {
-        console.error(`Failed to load QR for ${restaurant.name}`, err);
+        console.error("QR fetch failed", err);
       } finally {
         setLoadingQR(false);
       }
     }
 
     fetchQR();
-  }, [restaurant?._id, restaurant.name]);
+  }, [restaurant?._id]);
 
-  const handleDownloadQR = () => {
+  /* =========================
+     DOWNLOAD QR AS PDF
+  ========================= */
+  const downloadQRAsPDF = () => {
     if (!qr) return;
-    const link = document.createElement("a");
-    link.href = qr;
-    link.download = `${restaurant.name}-qr.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    // Title
+    pdf.setFontSize(18);
+    pdf.text(restaurant.name, 105, 20, { align: "center" });
+
+    // Subtitle
+    pdf.setFontSize(11);
+    pdf.text("Scan to view digital menu", 105, 28, { align: "center" });
+
+    // QR Image
+    pdf.addImage(qr, "PNG", 55, 40, 100, 100);
+
+    // Footer
+    pdf.setFontSize(10);
+    pdf.text(`Generated on: ${new Date().toLocaleString()}`, 105, 150, {
+      align: "center",
+    });
+
+    pdf.save(`${restaurant.name}-QR.pdf`);
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between transition-hover hover:shadow-md">
+    <div className="bg-white p-6 rounded-2xl shadow-sm border flex flex-col justify-between">
       <div>
         <h3 className="text-lg font-bold truncate">{restaurant.name}</h3>
+
         <p className="text-sm text-gray-500 mt-1">
           Status:{" "}
           <span
-            className={
-              restaurant.isActive
-                ? "text-green-600 font-medium"
-                : "text-red-500 font-medium"
-            }
+            className={restaurant.isActive ? "text-green-600" : "text-red-500"}
           >
             {restaurant.isActive ? "Active" : "Inactive"}
           </span>
         </p>
 
-        <div className="h-40 flex items-center justify-center bg-gray-50 rounded-xl mt-4 border border-dashed border-gray-200">
+        <div className="h-40 flex items-center justify-center mt-4 bg-gray-50 rounded-xl">
           {loadingQR ? (
             <p className="text-xs text-gray-400 animate-pulse">Loading QR...</p>
-          ) : qr ? (
-            <img src={qr} alt="QR Code" className="w-32 h-32 object-contain" />
           ) : (
-            <p className="text-xs text-gray-400">QR Unavailable</p>
+            qr && <img src={qr} alt="QR" className="w-32 h-32 object-contain" />
           )}
         </div>
       </div>
@@ -71,13 +81,14 @@ function RestaurantCard({ restaurant }) {
         <div className="flex gap-2">
           <button
             onClick={() => navigate(`/restaurant/${restaurant._id}`)}
-            className="flex-1 border border-gray-300 rounded-xl py-2 text-sm font-medium hover:bg-gray-50 transition"
+            className="flex-1 border rounded-xl py-2 text-sm"
           >
             Manage
           </button>
+
           <button
             onClick={() => navigate(`/menu/${restaurant._id}`)}
-            className="flex-1 bg-black text-white rounded-xl py-2 text-sm font-medium hover:bg-gray-800 transition"
+            className="flex-1 bg-black text-white rounded-xl py-2 text-sm"
           >
             Menu
           </button>
@@ -85,11 +96,11 @@ function RestaurantCard({ restaurant }) {
 
         {qr && (
           <button
-            onClick={handleDownloadQR}
-            className="w-full flex items-center justify-center gap-2 text-sm font-semibold border border-gray-200 rounded-xl py-2 hover:bg-gray-100 transition"
+            onClick={downloadQRAsPDF}
+            className="w-full flex items-center justify-center gap-2 border rounded-xl py-2 text-sm font-semibold hover:bg-gray-100"
           >
             <Download size={16} />
-            Download QR
+            Download QR (PDF)
           </button>
         )}
       </div>
