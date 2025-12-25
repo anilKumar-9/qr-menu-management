@@ -5,7 +5,7 @@ import OwnerRegister from "../pages/Owner";
 import OwnerLogin from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute"; 
-import CreateRestaurant from "./pages/CreateRestaurant";
+import CreateRestaurant from "../pages/CreateRestaurant";
 
 export default function App() {
   return (
@@ -29,8 +29,7 @@ export default function App() {
             <ProtectedRoute>
               <CreateRestaurant />
             </ProtectedRoute>
-          }
-        />
+          }/>
       </Routes>
     </BrowserRouter>
   );
