@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 
 import { getMe, logoutOwner } from "../api/auth.api";
 import { getRestaurants, getRestaurantQR } from "../api/restaurant.api";
+import RestaurantCard from "../components/RestaurantCard";
 
 export default function Dashboard() {
   const navigate = useNavigate();
