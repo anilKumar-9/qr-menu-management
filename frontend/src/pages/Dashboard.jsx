@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download } from "lucide-react";
-
 import { getMe, logoutOwner } from "../api/auth.api";
-import { getRestaurants, getRestaurantQR } from "../api/restaurant.api";
+import { getRestaurants } from "../api/restaurant.api";
 import RestaurantCard from "../components/RestaurantCard";
 
 export default function Dashboard() {
@@ -12,23 +10,26 @@ export default function Dashboard() {
   const [owner, setOwner] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
+      setError("");
 
       const [meRes, restRes] = await Promise.all([getMe(), getRestaurants()]);
 
       setOwner(meRes?.data?.data || null);
-      setRestaurants(restRes?.data?.data?.restaurant || []);
+
+      // ✅ VERY IMPORTANT: normalize data
+      const list = restRes?.data?.data?.restaurant || [];
+      setRestaurants(Array.isArray(list) ? list.filter(Boolean) : []);
     } catch (err) {
-      console.error("Dashboard Fetch Error:", err);
+      console.error("Dashboard error:", err);
       if (err?.response?.status === 401) {
         navigate("/login");
       } else {
-        setError("Unable to load dashboard.");
+        setError("Failed to load dashboard");
       }
     } finally {
       setLoading(false);
@@ -50,7 +51,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="animate-pulse">Loading Dashboard...</p>
+        Loading dashboard...
       </div>
     );
   }
@@ -59,7 +60,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <button onClick={fetchData} className="underline">
-          Try Again
+          Try again
         </button>
       </div>
     );
@@ -81,6 +82,7 @@ export default function Dashboard() {
           >
             + Create Restaurant
           </button>
+
           <button
             onClick={handleLogout}
             className="border px-6 py-2 rounded-xl"

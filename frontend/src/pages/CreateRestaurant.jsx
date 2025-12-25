@@ -1,101 +1,85 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download } from "lucide-react";
-import jsPDF from "jspdf";
+import { createRestaurant } from "../api/restaurant.api";
 
-import { getRestaurantQR } from "../api/restaurant.api";
-
-export default function RestaurantCard({ restaurant }) {
+export default function CreateRestaurant() {
   const navigate = useNavigate();
-  const [qr, setQr] = useState("");
-  const [loadingQR, setLoadingQR] = useState(true);
 
-  useEffect(() => {
-    if (!restaurant?._id) return;
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    async function fetchQR() {
-      try {
-        const res = await getRestaurantQR(restaurant._id);
-        setQr(res.data.data.qrCode);
-      } catch (err) {
-        console.error("Failed to load QR", err);
-      } finally {
-        setLoadingQR(false);
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!name || !address || !contactNumber) {
+      setError("All fields are required");
+      return;
     }
 
-    fetchQR();
-  }, [restaurant?._id]);
+    try {
+      setLoading(true);
 
-  // ✅ DOWNLOAD QR AS PDF
-  const downloadQRAsPDF = () => {
-    if (!qr) return;
+      await createRestaurant({
+        name: name.trim(),
+        address: address.trim(),
+        contactNumber: contactNumber.trim(),
+      });
 
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    pdf.setFontSize(18);
-    pdf.text(restaurant.name, 105, 20, { align: "center" });
-
-    pdf.setFontSize(12);
-    pdf.text("Scan to view menu", 105, 30, { align: "center" });
-
-    pdf.addImage(qr, "PNG", 55, 40, 100, 100);
-
-    pdf.setFontSize(10);
-    pdf.text(`Generated on ${new Date().toLocaleString()}`, 105, 150, {
-      align: "center",
-    });
-
-    pdf.save(`${restaurant.name}-QR.pdf`);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError(err?.response?.data?.message || "Failed to create restaurant");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-lg font-bold">{restaurant.name}</h3>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-2xl shadow w-full max-w-md"
+      >
+        <h2 className="text-2xl font-bold mb-4">Create Restaurant</h2>
 
-      <p className="text-sm text-gray-500 mt-1">
-        Status:{" "}
-        <span
-          className={restaurant.isActive ? "text-green-600" : "text-red-500"}
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
+        <input
+          type="text"
+          placeholder="Restaurant name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full border rounded-xl px-4 py-2 mb-3"
+        />
+
+        <input
+          type="text"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-full border rounded-xl px-4 py-2 mb-3"
+        />
+
+        <input
+          type="text"
+          placeholder="Contact number"
+          value={contactNumber}
+          onChange={(e) => setContactNumber(e.target.value)}
+          className="w-full border rounded-xl px-4 py-2 mb-4"
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-black text-white rounded-xl py-2"
         >
-          {restaurant.isActive ? "Active" : "Inactive"}
-        </span>
-      </p>
-
-      <div className="h-40 flex items-center justify-center mt-4 bg-gray-50 rounded-xl">
-        {loadingQR ? (
-          <p className="text-xs text-gray-400">Loading QR...</p>
-        ) : (
-          qr && <img src={qr} alt="QR" className="w-32 h-32" />
-        )}
-      </div>
-
-      <div className="mt-4 space-y-2">
-        <div className="flex gap-2">
-          <button
-            onClick={() => navigate(`/restaurant/${restaurant._id}`)}
-            className="flex-1 border rounded-xl py-2"
-          >
-            Manage
-          </button>
-          <button
-            onClick={() => navigate(`/menu/${restaurant._id}`)}
-            className="flex-1 bg-black text-white rounded-xl py-2"
-          >
-            Menu
-          </button>
-        </div>
-
-        {qr && (
-          <button
-            onClick={downloadQRAsPDF}
-            className="w-full flex items-center justify-center gap-2 border rounded-xl py-2"
-          >
-            <Download size={16} />
-            Download QR (PDF)
-          </button>
-        )}
-      </div>
+          {loading ? "Creating..." : "Create Restaurant"}
+        </button>
+      </form>
     </div>
   );
 }
