@@ -4,7 +4,7 @@ import instance from "../../utils/axios";
 export const createRestaurant = (data) => instance.post("/restaurants/restaurant", data);
 
 // ✅ get all restaurants
-export const getRestaurants = () => instance.get("/restaurants");
+export const getRestaurants = () => instance.get("/");
 
 // ✅ get single restaurant
 export const getRestaurantById = (restaurantId) =>
