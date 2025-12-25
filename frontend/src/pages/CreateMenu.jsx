@@ -22,14 +22,14 @@ export default function CreateMenu() {
     try {
       setLoading(true);
 
-      await createMenu({
-        restaurantId,
+      // ✅ CORRECT FUNCTION CALL
+      await createMenu(restaurantId, {
         title: title.trim(),
       });
 
-      // after success → go back to restaurant page
-      navigate(`/restaurant/${restaurantId}`);
+      navigate("/dashboard");
     } catch (err) {
+      console.error(err);
       setError(err?.response?.data?.message || "Failed to create menu");
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export default function CreateMenu() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-sm border w-full max-w-md"
+        className="bg-white p-6 rounded-2xl shadow border w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-4">Create Menu</h2>
 
