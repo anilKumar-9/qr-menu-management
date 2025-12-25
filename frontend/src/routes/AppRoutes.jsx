@@ -7,6 +7,8 @@ import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import CreateRestaurant from "../pages/CreateRestaurant";
 import CreateMenu from "../pages/CreateMenu";
+import ShowMenus from "../pages/ShowMenus";
+
 
 export default function App() {
   return (
@@ -44,6 +46,15 @@ export default function App() {
           }
         />
       </Routes>
+
+      <Route
+        path="/manage/restaurant/:restaurantId/menus"
+        element={
+          <ProtectedRoute>
+            <ShowMenus />
+          </ProtectedRoute>
+        }
+      />
     </BrowserRouter>
   );
 }

@@ -13,6 +13,7 @@ const createMenu = asyncHandler(async (req, res) => {
     _id: restaurantId,
     owner: req.user.id,
     isActive: true,
+    isPublished:true
   });
 
   if (!restaurant) {
