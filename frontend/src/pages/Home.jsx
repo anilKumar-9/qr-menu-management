@@ -149,8 +149,8 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           
-          <Link to="/" className="flex items-center gap-3 group">
-          
+          <Link to="/#" className="flex items-center gap-3 group">
+            
             <div className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded group-hover:rotate-12 transition-transform">
               Q
             </div>
