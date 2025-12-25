@@ -26,8 +26,6 @@ export default function CreateRestaurant() {
         contactNumber: data.contactNumber.trim(),
       });
 
-
-      // ✅ success → go back to dashboard
       navigate("/dashboard");
     } catch (err) {
       setApiError(
@@ -64,20 +62,34 @@ export default function CreateRestaurant() {
           <div>
             <label className="text-sm font-semibold">Address</label>
             <input
-              {...register("address")}
+              {...register("address", { required: "Address is required" })}
               className="w-full mt-2 px-4 py-3 border rounded-xl"
               placeholder="Hyderabad"
             />
+            {errors.address && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.address.message}
+              </p>
+            )}
           </div>
 
-          {/* Phone */}
+          {/* Contact Number */}
           <div>
-            <label className="text-sm font-semibold">Phone</label>
+            <label className="text-sm font-semibold">Contact Number</label>
             <input
-              {...register("phone")}
+              {...register("contactNumber", {
+                required: "Contact number is required",
+                minLength: { value: 10, message: "Must be 10 digits" },
+                maxLength: { value: 10, message: "Must be 10 digits" },
+              })}
               className="w-full mt-2 px-4 py-3 border rounded-xl"
               placeholder="9876543210"
             />
+            {errors.contactNumber && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.contactNumber.message}
+              </p>
+            )}
           </div>
 
           {apiError && (
