@@ -6,8 +6,7 @@ export default function CreateMenu() {
   const { restaurantId } = useParams();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -15,8 +14,8 @@ export default function CreateMenu() {
     e.preventDefault();
     setError("");
 
-    if (!name.trim()) {
-      setError("Menu name is required");
+    if (!title.trim()) {
+      setError("Menu title is required");
       return;
     }
 
@@ -25,11 +24,10 @@ export default function CreateMenu() {
 
       await createMenu({
         restaurantId,
-        name: name.trim(),
-        description: description.trim(),
+        title: title.trim(),
       });
 
-      // After menu creation → go back
+      // after success → go back to restaurant page
       navigate(`/restaurant/${restaurantId}`);
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to create menu");
@@ -50,16 +48,9 @@ export default function CreateMenu() {
 
         <input
           type="text"
-          placeholder="Menu name (e.g. Main Menu)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border rounded-xl px-4 py-2 mb-3"
-        />
-
-        <textarea
-          placeholder="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Menu title (e.g. Main Menu)"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full border rounded-xl px-4 py-2 mb-4"
         />
 
