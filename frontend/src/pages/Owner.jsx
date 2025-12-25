@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerOwner } from "../api/auth.api.js";
 
-export default function OwnerLogin() {
+export default function OwnerRegister() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const {
     register,
@@ -18,16 +19,22 @@ export default function OwnerLogin() {
 
   const onSubmit = async (data) => {
     setApiError("");
+    setSuccess("");
     setLoading(true);
 
     try {
       await registerOwner({
-        ownername: data.name, // 🔑 backend expects ownername
+        ownername: data.name, // backend expects ownername
         email: data.email,
         password: data.password,
       });
 
-      navigate("/login");
+      setSuccess(
+        "Account created successfully. Please check your email to verify your account before logging in."
+      );
+
+      // Optional: redirect after few seconds
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       setApiError(
         err?.response?.data?.message ||
@@ -108,9 +115,17 @@ export default function OwnerLogin() {
             </div>
           </div>
 
+          {/* Error */}
           {apiError && (
             <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">
               {apiError}
+            </p>
+          )}
+
+          {/* Success */}
+          {success && (
+            <p className="text-sm text-green-700 bg-green-50 p-3 rounded-xl">
+              {success}
             </p>
           )}
 

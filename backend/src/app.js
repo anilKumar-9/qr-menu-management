@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: [process.env.CORS_ORIGIN,'http://localhost:5173'].filter(Boolean),
+    origin: process.env.CORS_ORIGIN||'http://localhost:5173',
     credentials: true,
     allowedHeaders:['Authorization','Content-Type'],
     methods:["GET","POST","PUT","PATCH","DELETE"]

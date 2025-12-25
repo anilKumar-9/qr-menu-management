@@ -95,7 +95,7 @@ const login = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(401, 'Invalid email or password');
   }
-
+  
   const isPasswordValid = await user.comparePassword(password);
 
   if (!isPasswordValid) {

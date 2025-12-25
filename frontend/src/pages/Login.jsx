@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginOwner } from "../api/auth.api.js";
 
@@ -9,6 +9,7 @@ export default function OwnerLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [verifyHint, setVerifyHint] = useState(false);
 
   const {
     register,
@@ -18,6 +19,7 @@ export default function OwnerLogin() {
 
   const onSubmit = async (data) => {
     setApiError("");
+    setVerifyHint(false);
     setLoading(true);
 
     try {
@@ -26,9 +28,20 @@ export default function OwnerLogin() {
         password: data.password,
       });
 
+      // ✅ only after successful login
       navigate("/dashboard");
     } catch (err) {
-      setApiError(err?.response?.data?.message || "Invalid email or password");
+      const message = err?.response?.data?.message;
+
+      if (
+        message?.toLowerCase().includes("verify") ||
+        message?.toLowerCase().includes("not verified")
+      ) {
+        setApiError("Please verify your email before logging in.");
+        setVerifyHint(true);
+      } else {
+        setApiError(message || "Invalid email or password");
+      }
     } finally {
       setLoading(false);
     }
@@ -51,6 +64,7 @@ export default function OwnerLogin() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
           <div>
             <label className="text-sm font-semibold">Email</label>
             <div className="relative mt-2">
@@ -61,23 +75,50 @@ export default function OwnerLogin() {
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200"
               />
             </div>
+            {errors.email && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="text-sm font-semibold">Password</label>
             <div className="relative mt-2">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="password"
-                {...register("password", { required: "Password is required" })}
+                {...register("password", {
+                  required: "Password is required",
+                })}
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200"
               />
             </div>
+            {errors.password && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
+          {/* Error */}
           {apiError && (
             <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl">
               {apiError}
+            </p>
+          )}
+
+          {/* Verify hint */}
+          {verifyHint && (
+            <p className="text-sm text-blue-600 bg-blue-50 p-3 rounded-xl">
+              Didn’t get the email?{" "}
+              <Link
+                to="/resend-verification"
+                className="font-semibold underline"
+              >
+                Resend verification
+              </Link>
             </p>
           )}
 
