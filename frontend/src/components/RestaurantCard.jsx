@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRestaurantQR } from "../api/restaurant.api.js";
+import { getRestaurantQR } from "../api/restaurant.api";
 import { useNavigate } from "react-router-dom";
 
 export default function RestaurantCard({ restaurant }) {
@@ -22,7 +22,7 @@ export default function RestaurantCard({ restaurant }) {
     }
 
     fetchQR();
-  }, [restaurant?._id]); // 🔥 FIXED
+  }, [restaurant?._id]);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow">
@@ -37,7 +37,7 @@ export default function RestaurantCard({ restaurant }) {
         </span>
       </p>
 
-      {/* QR */}
+      {/* QR CODE */}
       {loadingQR ? (
         <p className="text-xs text-gray-400 text-center mt-4">Loading QR...</p>
       ) : (

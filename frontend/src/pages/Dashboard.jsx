@@ -6,6 +6,7 @@ import RestaurantCard from "../components/RestaurantCard";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+
   const [owner, setOwner] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,30 +14,50 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
+        // 1️⃣ Fetch logged-in owner
         const meRes = await getMe();
-        const restRes = await getRestaurants();
-
         setOwner(meRes.data.data);
-        setRestaurants(restRes.data.data);
+
+        // 2️⃣ Fetch restaurants
+        const restRes = await getRestaurants();
+        const raw = restRes.data.data;
+
+        // 🔥 NORMALIZE API RESPONSE (CRITICAL FIX)
+        const restaurantsArray = Array.isArray(raw)
+          ? raw
+          : Array.isArray(raw?.restaurants)
+          ? raw.restaurants
+          : Array.isArray(raw?.docs)
+          ? raw.docs
+          : [];
+
+        setRestaurants(restaurantsArray);
       } catch (err) {
+        console.error("Dashboard auth error", err);
         navigate("/login");
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = async () => {
-    await logoutOwner();
-    navigate("/login");
+    try {
+      await logoutOwner();
+    } finally {
+      navigate("/login");
+    }
   };
 
-  if (loading) return <p className="p-8">Loading dashboard...</p>;
+  if (loading) {
+    return <p className="p-8 text-gray-500">Loading dashboard...</p>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-2xl font-bold">Welcome, {owner?.ownername}</h1>
@@ -53,7 +74,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Restaurants */}
+      {/* RESTAURANTS */}
       {restaurants.length === 0 ? (
         <div className="bg-white p-10 rounded-2xl text-center shadow">
           <h2 className="text-xl font-bold mb-2">No restaurants yet</h2>
@@ -69,9 +90,10 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {restaurants.map((restaurant) => (
-            <RestaurantCard key={restaurant._id} restaurant={restaurant} />
-          ))}
+          {Array.isArray(restaurants) &&
+            restaurants.map((restaurant) => (
+              <RestaurantCard key={restaurant._id} restaurant={restaurant} />
+            ))}
         </div>
       )}
     </div>
