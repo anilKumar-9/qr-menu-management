@@ -13,7 +13,7 @@ const createMenu = asyncHandler(async (req, res) => {
     _id: restaurantId,
     owner: req.user.id,
     isActive: true,
-    isPublished:true
+  
   });
 
   if (!restaurant) {
@@ -23,7 +23,7 @@ const createMenu = asyncHandler(async (req, res) => {
   const menu = await Menu.create({
     restaurantId,
     title,
-    isPublished: false,
+    isPublished: true,
     isActive: true,
   });
 
