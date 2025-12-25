@@ -1,21 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import { getRestaurantQR } from "../api/restaurant.api";
 
 export default function RestaurantCard({ restaurant }) {
+  if (!restaurant) return null;
+
   const navigate = useNavigate();
   const [qr, setQr] = useState("");
   const [loadingQR, setLoadingQR] = useState(true);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!restaurant?._id) return;
+    if (!restaurant?._id || fetchedRef.current) return;
+    fetchedRef.current = true;
 
     async function fetchQR() {
       try {
         const res = await getRestaurantQR(restaurant._id);
-        setQr(res.data.data.qrCode);
+        setQr(res?.data?.data?.qrCode || "");
       } catch (err) {
         console.error("QR fetch failed", err);
       } finally {
@@ -38,7 +42,9 @@ export default function RestaurantCard({ restaurant }) {
     pdf.text(restaurant.name, 105, 20, { align: "center" });
 
     pdf.setFontSize(11);
-    pdf.text("Scan to view digital menu", 105, 28, { align: "center" });
+    pdf.text("Scan to view digital menu", 105, 28, {
+      align: "center",
+    });
 
     pdf.addImage(qr, "PNG", 55, 40, 100, 100);
 
@@ -68,14 +74,20 @@ export default function RestaurantCard({ restaurant }) {
           {loadingQR ? (
             <p className="text-xs text-gray-400 animate-pulse">Loading QR...</p>
           ) : (
-            qr && <img src={qr} alt="QR" className="w-32 h-32 object-contain" />
+            qr && (
+              <img
+                src={qr}
+                alt={`${restaurant.name} QR`}
+                className="w-32 h-32 object-contain"
+              />
+            )
           )}
         </div>
       </div>
 
       <div className="mt-4 space-y-2">
+        {/* ROW 1 */}
         <div className="flex gap-2">
-          {/* Restaurant Settings */}
           <button
             onClick={() => navigate(`/restaurant/${restaurant._id}`)}
             className="flex-1 border rounded-xl py-2 text-sm"
@@ -83,7 +95,6 @@ export default function RestaurantCard({ restaurant }) {
             Manage
           </button>
 
-          {/* ✅ CREATE MENU (OWNER FLOW) */}
           <button
             onClick={() =>
               navigate(`/manage/restaurant/${restaurant._id}/menu/create`)
@@ -94,6 +105,15 @@ export default function RestaurantCard({ restaurant }) {
           </button>
         </div>
 
+        {/* ROW 2 */}
+        <button
+          onClick={() => navigate(`/manage/restaurant/${restaurant._id}/menus`)}
+          className="w-full border rounded-xl py-2 text-sm font-semibold"
+        >
+          Show Menus
+        </button>
+
+        {/* QR DOWNLOAD */}
         {qr && (
           <button
             onClick={downloadQRAsPDF}
