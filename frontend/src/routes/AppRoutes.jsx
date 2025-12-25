@@ -45,16 +45,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-      </Routes>
 
-      <Route
-        path="/manage/restaurant/:restaurantId/menus"
-        element={
-          <ProtectedRoute>
-            <ShowMenus />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/manage/restaurant/:restaurantId/menus"
+          element={
+            <ProtectedRoute>
+              <ShowMenus />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
