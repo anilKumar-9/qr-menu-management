@@ -58,6 +58,7 @@ export default function RestaurantCard({ restaurant }) {
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm border flex flex-col justify-between">
+      {/* TOP */}
       <div>
         <h3 className="text-lg font-bold truncate">{restaurant.name}</h3>
 
@@ -74,17 +75,12 @@ export default function RestaurantCard({ restaurant }) {
           {loadingQR ? (
             <p className="text-xs text-gray-400 animate-pulse">Loading QR...</p>
           ) : (
-            qr && (
-              <img
-                src={qr}
-                alt={`${restaurant.name} QR`}
-                className="w-32 h-32 object-contain"
-              />
-            )
+            qr && <img src={qr} alt="QR" className="w-32 h-32 object-contain" />
           )}
         </div>
       </div>
 
+      {/* ACTIONS */}
       <div className="mt-4 space-y-2">
         {/* ROW 1 */}
         <div className="flex gap-2">
@@ -106,12 +102,24 @@ export default function RestaurantCard({ restaurant }) {
         </div>
 
         {/* ROW 2 */}
-        <button
-          onClick={() => navigate(`/manage/restaurant/${restaurant._id}/menus`)}
-          className="w-full border rounded-xl py-2 text-sm font-semibold"
-        >
-          Show Menus
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() =>
+              navigate(`/manage/restaurant/${restaurant._id}/menus`)
+            }
+            className="flex-1 border rounded-xl py-2 text-sm font-semibold"
+          >
+            Show Menus
+          </button>
+
+          {/* ✅ PUBLIC MENU (QR PREVIEW) */}
+          <button
+            onClick={() => navigate(`/menu/${restaurant._id}`)}
+            className="flex-1 border rounded-xl py-2 text-sm font-semibold"
+          >
+            View Public Menu
+          </button>
+        </div>
 
         {/* QR DOWNLOAD */}
         {qr && (
