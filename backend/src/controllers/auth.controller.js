@@ -95,7 +95,7 @@ const login = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(401, 'Invalid email or password');
   }
-  
+
   const isPasswordValid = await user.comparePassword(password);
 
   if (!isPasswordValid) {
@@ -113,6 +113,8 @@ const login = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
+    sameSite: 'none', 
+    path: '/',
   };
 
   res
@@ -142,6 +144,8 @@ const logout = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
+    sameSite: 'none', 
+    path: '/',
   };
 
   res
@@ -255,6 +259,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
+      path: '/',
     };
 
     res
