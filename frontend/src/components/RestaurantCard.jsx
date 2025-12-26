@@ -42,9 +42,7 @@ export default function RestaurantCard({ restaurant }) {
     pdf.text(restaurant.name, 105, 20, { align: "center" });
 
     pdf.setFontSize(11);
-    pdf.text("Scan to view digital menu", 105, 28, {
-      align: "center",
-    });
+    pdf.text("Scan to view digital menu", 105, 28, { align: "center" });
 
     pdf.addImage(qr, "PNG", 55, 40, 100, 100);
 
@@ -85,34 +83,12 @@ export default function RestaurantCard({ restaurant }) {
         {/* ROW 1 */}
         <div className="flex gap-2">
           <button
-            onClick={() => navigate(`/restaurant/${restaurant._id}`)}
-            className="flex-1 border rounded-xl py-2 text-sm"
-          >
-            Manage
-          </button>
-
-          <button
-            onClick={() =>
-              navigate(`/manage/restaurant/${restaurant._id}/menu/create`)
-            }
-            className="flex-1 bg-black text-white rounded-xl py-2 text-sm"
-          >
-            Create Menu
-          </button>
-        </div>
-
-        {/* ROW 2 */}
-        <div className="flex gap-2">
-          <button
-            onClick={() =>
-              navigate(`/manage/restaurant/${restaurant._id}/menus`)
-            }
+            onClick={() => navigate(`/restaurant/${restaurant._id}/menus`)}
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
           >
-            Show Menus
+            Manage Menus
           </button>
 
-          {/* ✅ PUBLIC MENU (QR PREVIEW) */}
           <button
             onClick={() => navigate(`/menu/${restaurant._id}`)}
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
