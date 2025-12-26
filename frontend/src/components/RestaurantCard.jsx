@@ -80,11 +80,11 @@ export default function RestaurantCard({ restaurant }) {
 
       {/* ACTIONS */}
       <div className="mt-4 space-y-2">
-        {/* ROW 1 */}
         <div className="flex gap-2">
+          {/* ✅ FIXED ROUTE */}
           <button
             onClick={() =>
-              navigate(`/restaurant/${restaurant._id}/menus`)
+              navigate(`/manage/restaurant/${restaurant._id}/menus`)
             }
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
           >
@@ -92,16 +92,13 @@ export default function RestaurantCard({ restaurant }) {
           </button>
 
           <button
-            onClick={() =>
-              navigate(`/menu/${restaurant._id}`)
-            }
+            onClick={() => navigate(`/menu/${restaurant._id}`)}
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
           >
             View Public Menu
           </button>
         </div>
 
-        {/* QR DOWNLOAD */}
         {qr && (
           <button
             onClick={downloadQRAsPDF}
