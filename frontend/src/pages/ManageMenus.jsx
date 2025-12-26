@@ -1,7 +1,6 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "../api/axios"; // your axios instance
+import axios from "../api/axios";
 
 export default function ManageMenuItems() {
   const { menuId } = useParams();
@@ -14,9 +13,11 @@ export default function ManageMenuItems() {
   useEffect(() => {
     async function fetchItems() {
       try {
-        const res = await axios.get(`/menu-items/${menuId}`);
+        // ✅ FIXED API PATH
+        const res = await axios.get(`/menu-items/menu/${menuId}`);
         setItems(res.data.data);
       } catch (err) {
+        console.error(err);
         setError("Failed to load menu items");
       } finally {
         setLoading(false);
@@ -31,6 +32,7 @@ export default function ManageMenuItems() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Menu Items</h1>
 
@@ -42,8 +44,9 @@ export default function ManageMenuItems() {
         </button>
       </div>
 
+      {/* CONTENT */}
       {items.length === 0 ? (
-        <p>No items added yet.</p>
+        <p className="text-gray-500">No items added yet.</p>
       ) : (
         <div className="space-y-4">
           {items.map((item) => (
@@ -54,7 +57,7 @@ export default function ManageMenuItems() {
               <div>
                 <h3 className="font-semibold capitalize">{item.name}</h3>
                 <p className="text-sm text-gray-600">{item.description}</p>
-                <p className="mt-1">₹ {item.price}</p>
+                <p className="mt-1 font-medium">₹ {item.price}</p>
                 <p className="text-xs text-gray-400">
                   Category: {item.category}
                 </p>
