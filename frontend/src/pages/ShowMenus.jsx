@@ -59,7 +59,7 @@ export default function ShowMenus() {
               key={menu._id}
               className="border rounded p-4 flex justify-between items-center"
             >
-              <span className="font-semibold">{menu.name}</span>
+              <span className="font-semibold">{menu.title}</span>
 
               <button
                 onClick={() => navigate(`/menu/${menu._id}/items`)}
