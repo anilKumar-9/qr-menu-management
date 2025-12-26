@@ -89,6 +89,9 @@ export default function App() {
             <Navigate to="/manage/restaurant/:restaurantId/menus" replace />
           }
         />
+
+        <Route path="/menu/:menuId/items" element={<ManageMenuItems />} />
+        
       </Routes>
     </BrowserRouter>
   );
