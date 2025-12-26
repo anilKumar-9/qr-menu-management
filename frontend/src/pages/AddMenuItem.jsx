@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "../api/axios";
+import axios from "../utils/axios";
+
 
 export default function AddMenuItem() {
   const { menuId } = useParams();

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../api/axios";
+import axios from "../utils/axios";
+
+
 
 export default function ShowMenus() {
   const { restaurantId } = useParams();
