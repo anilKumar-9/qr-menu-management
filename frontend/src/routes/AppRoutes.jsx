@@ -1,7 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
-import RestaurantRedirect from "./RestaurantRedirect";
 import Home from "../pages/Home";
 import PublicMenu from "../pages/PublicMenu";
 import OwnerRegister from "../pages/Owner";
@@ -13,21 +11,25 @@ import CreateMenu from "../pages/CreateMenu";
 import ShowMenus from "../pages/ShowMenus";
 import ManageMenuItems from "../pages/ManageMenuItems";
 import AddMenuItem from "../pages/AddMenuItem";
+import RestaurantRedirect from "./RestaurantRedirect";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* PUBLIC ROUTES */}
+        {/* PUBLIC */}
         <Route path="/" element={<Home />} />
         <Route path="/menu/:restaurantId" element={<PublicMenu />} />
         <Route path="/register" element={<OwnerRegister />} />
         <Route path="/login" element={<OwnerLogin />} />
+
+        {/* REDIRECT */}
         <Route
           path="/restaurant/:restaurantId"
           element={<RestaurantRedirect />}
         />
-        {/* PROTECTED ROUTES */}
+
+        {/* PROTECTED */}
         <Route
           path="/dashboard"
           element={
@@ -47,19 +49,19 @@ export default function App() {
         />
 
         <Route
-          path="/manage/restaurant/:restaurantId/menu/create"
+          path="/manage/restaurant/:restaurantId/menus"
           element={
             <ProtectedRoute>
-              <CreateMenu />
+              <ShowMenus />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/manage/restaurant/:restaurantId/menus"
+          path="/manage/restaurant/:restaurantId/menu/create"
           element={
             <ProtectedRoute>
-              <ShowMenus />
+              <CreateMenu />
             </ProtectedRoute>
           }
         />
@@ -81,17 +83,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* 🔁 IMPORTANT REDIRECT (THIS FIXES YOUR ERROR) */}
-        <Route
-          path="/restaurant/:restaurantId"
-          element={
-            <Navigate to="/manage/restaurant/:restaurantId/menus" replace />
-          }
-        />
-
-        <Route path="/menu/:menuId/items" element={<ManageMenuItems />} />
-        
       </Routes>
     </BrowserRouter>
   );
