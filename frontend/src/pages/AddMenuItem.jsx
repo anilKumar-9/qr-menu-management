@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "../utils/axios";
 
-
 export default function AddMenuItem() {
   const { menuId } = useParams();
   const navigate = useNavigate();
@@ -18,10 +17,10 @@ export default function AddMenuItem() {
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -31,11 +30,13 @@ export default function AddMenuItem() {
 
     try {
       await axios.post("/menu-items", {
-        ...form,
         menuId,
+        name: form.name,
+        description: form.description,
+        price: Number(form.price), // ✅ important
+        category: form.category,
       });
 
-      // go back to manage items page
       navigate(`/menu/${menuId}/items`);
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to add menu item");
@@ -54,6 +55,7 @@ export default function AddMenuItem() {
         <input
           type="text"
           name="name"
+          value={form.name}
           placeholder="Item name"
           required
           className="w-full border p-2 rounded"
@@ -62,6 +64,7 @@ export default function AddMenuItem() {
 
         <textarea
           name="description"
+          value={form.description}
           placeholder="Description"
           required
           className="w-full border p-2 rounded"
@@ -71,6 +74,7 @@ export default function AddMenuItem() {
         <input
           type="number"
           name="price"
+          value={form.price}
           placeholder="Price"
           required
           className="w-full border p-2 rounded"
@@ -80,6 +84,7 @@ export default function AddMenuItem() {
         <input
           type="text"
           name="category"
+          value={form.category}
           placeholder="Category (e.g. veg, non-veg)"
           required
           className="w-full border p-2 rounded"
