@@ -1,4 +1,4 @@
-import instance from "../../utils/axios.js";
+import instance from "../utils/axios.js";
 
 export const registerOwner = (data) => instance.post("/users/register", data);
 

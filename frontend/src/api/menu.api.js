@@ -1,4 +1,4 @@
-import instance from "../../utils/axios";
+import instance from "../utils/axios";
 
 export const createMenu = (restaurantId, data) =>
   instance.post(`/menus/${restaurantId}`, data);

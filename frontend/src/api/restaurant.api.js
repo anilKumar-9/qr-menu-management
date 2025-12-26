@@ -1,7 +1,8 @@
-import instance from "../../utils/axios";
+import instance from "../utils/axios";
 
 // ✅ create restaurant
-export const createRestaurant = (data) => instance.post("/restaurants/restaurant", data);
+export const createRestaurant = (data) =>
+  instance.post("/restaurants/restaurant", data);
 
 // ✅ get all restaurants
 export const getRestaurants = () => instance.get("/restaurants");
