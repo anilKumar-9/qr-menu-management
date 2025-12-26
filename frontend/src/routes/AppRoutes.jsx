@@ -8,6 +8,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import CreateRestaurant from "../pages/CreateRestaurant";
 import CreateMenu from "../pages/CreateMenu";
 import ShowMenus from "../pages/ShowMenus";
+import ManageMenuItems from "../pages/ManageMenuItems";
+import AddMenuItem from "../pages/AddMenuItem";
 
 
 export default function App() {
@@ -54,6 +56,11 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/menu/:menuId/items" element={<ManageMenuItems />} />
+
+        <Route path="/menu/:menuId/items/add" element={<AddMenuItem />} />
+
       </Routes>
     </BrowserRouter>
   );
