@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+
+import RestaurantRedirect from "./RestaurantRedirect";
 import Home from "../pages/Home";
 import PublicMenu from "../pages/PublicMenu";
 import OwnerRegister from "../pages/Owner";
@@ -21,7 +23,10 @@ export default function App() {
         <Route path="/menu/:restaurantId" element={<PublicMenu />} />
         <Route path="/register" element={<OwnerRegister />} />
         <Route path="/login" element={<OwnerLogin />} />
-
+        <Route
+          path="/restaurant/:restaurantId"
+          element={<RestaurantRedirect />}
+        />
         {/* PROTECTED ROUTES */}
         <Route
           path="/dashboard"
