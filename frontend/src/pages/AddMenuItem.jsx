@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "../utils/axios";
+import { createMenuItem } from "../api/menuitem.api";
 
 export default function AddMenuItem() {
   const { menuId } = useParams();
@@ -29,11 +29,10 @@ export default function AddMenuItem() {
     setLoading(true);
 
     try {
-      await axios.post("/menu-items", {
-        menuId,
+      await createMenuItem(menuId, {
         name: form.name,
         description: form.description,
-        price: Number(form.price), // ✅ important
+        price: Number(form.price),
         category: form.category,
       });
 
@@ -85,7 +84,7 @@ export default function AddMenuItem() {
           type="text"
           name="category"
           value={form.category}
-          placeholder="Category (e.g. veg, non-veg)"
+          placeholder="Category (veg / non-veg)"
           required
           className="w-full border p-2 rounded"
           onChange={handleChange}
