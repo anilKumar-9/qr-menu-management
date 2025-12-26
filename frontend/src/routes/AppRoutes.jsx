@@ -61,6 +61,15 @@ export default function App() {
 
         <Route path="/menu/:menuId/items/add" element={<AddMenuItem />} />
 
+        <Route
+          path="/restaurant/:restaurantId"
+          element={<Navigate to="menus" replace />}
+        />
+
+        <Route
+          path="/restaurant/:restaurantId/menus"
+          element={<ManageMenus />}
+        />
       </Routes>
     </BrowserRouter>
   );
