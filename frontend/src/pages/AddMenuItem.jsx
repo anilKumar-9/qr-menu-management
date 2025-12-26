@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { createMenuItem } from "../api/menuitem.api";
+import { createMenuItem } from "../api/menuitem.api.js";
 
 export default function AddMenuItem() {
   const { menuId } = useParams();
