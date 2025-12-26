@@ -83,14 +83,18 @@ export default function RestaurantCard({ restaurant }) {
         {/* ROW 1 */}
         <div className="flex gap-2">
           <button
-            onClick={() => navigate(`/restaurant/${restaurant._id}/menus`)}
+            onClick={() =>
+              navigate(`/restaurant/${restaurant._id}/menus`)
+            }
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
           >
             Manage Menus
           </button>
 
           <button
-            onClick={() => navigate(`/menu/${restaurant._id}`)}
+            onClick={() =>
+              navigate(`/menu/${restaurant._id}`)
+            }
             className="flex-1 border rounded-xl py-2 text-sm font-semibold"
           >
             View Public Menu
