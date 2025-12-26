@@ -148,9 +148,7 @@ export default function Home() {
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          
           <Link to="/#" className="flex items-center gap-3 group">
-            
             <div className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded group-hover:rotate-12 transition-transform">
               Q
             </div>
@@ -365,7 +363,6 @@ export default function Home() {
           <div className="relative max-w-6xl mx-auto px-6 w-full py-16">
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-20">
-              
               <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
                 Simple Setup
               </h2>
@@ -601,22 +598,34 @@ export default function Home() {
               </h4>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://github.com/anilKumar-9/qr-menu-management"
+                    className="hover:text-white transition"
+                  >
                     Documentation
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://github.com/anilKumar-9/qr-menu-management"
+                    className="hover:text-white transition"
+                  >
                     API Reference
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://github.com/anilKumar-9"
+                    className="hover:text-white transition"
+                  >
                     Support
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://github.com/anilKumar-9/qr-menu-management"
+                    className="hover:text-white transition"
+                  >
                     Blog
                   </a>
                 </li>
@@ -630,12 +639,18 @@ export default function Home() {
               </h4>
               <ul className="space-y-3 text-sm text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://www.linkedin.com/in/nagapurianilkumar/"
+                    className="hover:text-white transition"
+                  >
                     About
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition">
+                  <a
+                    href="https://www.linkedin.com/in/nagapurianilkumar/"
+                    className="hover:text-white transition"
+                  >
                     Contact
                   </a>
                 </li>
