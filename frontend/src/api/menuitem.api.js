@@ -4,8 +4,9 @@ import instance from "../utils/axios";
 export const getMenuItemsByMenu = (menuId) =>
   instance.get(`/menu-items/menu/${menuId}`);
 
-// create menu item ✅ FIX
-export const createMenuItem = (data) => instance.post("/menu-items", data);
+// ✅ CREATE ITEM — FIXED
+export const createMenuItem = (menuId, data) =>
+  instance.post(`/menu-items/menu/${menuId}`, data);
 
 // delete item
 export const deleteMenuItem = (itemId) =>
