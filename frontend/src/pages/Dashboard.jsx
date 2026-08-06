@@ -26,17 +26,20 @@ export default function Dashboard() {
       setLoading(true);
       setError("");
 
-      const [meRes, restRes, menuCountRes] = await Promise.all([
-        getMe(),
-        getRestaurants(),
-        getMenuCount(),
-      ]);
+      const [meRes, restRes] = await Promise.all([getMe(), getRestaurants()]);
 
       setOwner(meRes?.data?.data || null);
 
       const list = restRes?.data?.data?.restaurant || [];
       setRestaurants(Array.isArray(list) ? list.filter(Boolean) : []);
-      setMenuCount(menuCountRes?.data?.data?.count ?? 0);
+
+      try {
+        const menuCountRes = await getMenuCount();
+        setMenuCount(menuCountRes?.data?.data?.count ?? 0);
+      } catch (countErr) {
+        console.warn("Menu count load failed", countErr);
+        setMenuCount(0);
+      }
     } catch (err) {
       console.error("Dashboard error:", err);
       if (err?.response?.status === 401) {
