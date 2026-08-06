@@ -80,6 +80,7 @@ export default function OwnerRegister() {
               type="text"
               placeholder="Anil Kumar"
               error={errors.name?.message}
+              autoComplete="name"
               {...register("name", {
                 required: "Name is required",
                 minLength: { value: 3, message: "Minimum 3 characters" },
@@ -92,6 +93,7 @@ export default function OwnerRegister() {
               type="email"
               placeholder="owner@email.com"
               error={errors.email?.message}
+              autoComplete="email"
               {...register("email", { required: "Email is required" })}
             />
 
@@ -101,6 +103,7 @@ export default function OwnerRegister() {
               type="password"
               placeholder="••••••••"
               error={errors.password?.message}
+              autoComplete="new-password"
               {...register("password", {
                 required: "Password is required",
                 minLength: { value: 6, message: "Minimum 6 characters" },

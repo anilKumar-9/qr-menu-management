@@ -77,6 +77,7 @@ export default function OwnerLogin() {
               type="email"
               placeholder="owner@email.com"
               error={errors.email?.message}
+              autoComplete="email"
               {...register("email", { required: "Email is required" })}
             />
 
@@ -86,6 +87,7 @@ export default function OwnerLogin() {
               type="password"
               placeholder="••••••••"
               error={errors.password?.message}
+              autoComplete="current-password"
               {...register("password", { required: "Password is required" })}
             />
 
