@@ -10,6 +10,7 @@ import {
   unPublishMenu,
   deleteMenu,
   getMenus,
+  getMenuById,
 } from '../controllers/menu.controller.js';
 
 const menuRouter = express.Router();
@@ -27,6 +28,7 @@ menuRouter.get(
   accessTokenVerify,
   getMenus,
 );
+menuRouter.get('/:menuId', accessTokenVerify, getMenuById);
 menuRouter.delete('/:menuId', accessTokenVerify, deleteMenu);
 menuRouter.patch("/:menuId/activate", accessTokenVerify, activateMenu)
 menuRouter.patch('/:menuId/deactivate', accessTokenVerify, deactivateMenu);

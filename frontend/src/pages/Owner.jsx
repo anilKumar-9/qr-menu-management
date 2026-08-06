@@ -69,7 +69,7 @@ export default function OwnerRegister() {
               Create Account
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-              Register as a restaurant owner
+              Register as a restaurant owner. No email verification required.
             </p>
           </div>
 

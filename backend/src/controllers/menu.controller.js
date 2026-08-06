@@ -197,6 +197,29 @@ const getMenus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, menus, 'Menus fetched successfully'));
 });
 
+const getMenuById = asyncHandler(async (req, res) => {
+  const { menuId } = req.params;
+
+  const menu = await Menu.findById(menuId);
+  if (!menu) {
+    throw new ApiError(404, 'Menu not found');
+  }
+
+  const restaurant = await Restaurant.findOne({
+    _id: menu.restaurantId,
+    owner: req.user.id,
+    isActive: true,
+  });
+
+  if (!restaurant) {
+    throw new ApiError(403, 'Unauthorized or inactive restaurant');
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, menu, 'Menu fetched successfully'));
+});
+
 
 
 
@@ -207,5 +230,6 @@ export {
   publishMenu,
   unPublishMenu,
   deleteMenu,
-  getMenus
+  getMenus,
+  getMenuById
 };
