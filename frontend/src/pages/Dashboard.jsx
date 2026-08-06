@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Store, PlusCircle, UtensilsCrossed, QrCode } from "lucide-react";
 import { getMe } from "../api/auth.api";
+import { getMenuCount } from "../api/menu.api";
 import { getRestaurants, deleteRestaurant } from "../api/restaurant.api";
 import AdminLayout from "../components/layout/AdminLayout";
 import Button from "../components/ui/Button";
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [owner, setOwner] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+  const [menuCount, setMenuCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -24,12 +26,17 @@ export default function Dashboard() {
       setLoading(true);
       setError("");
 
-      const [meRes, restRes] = await Promise.all([getMe(), getRestaurants()]);
+      const [meRes, restRes, menuCountRes] = await Promise.all([
+        getMe(),
+        getRestaurants(),
+        getMenuCount(),
+      ]);
 
       setOwner(meRes?.data?.data || null);
 
       const list = restRes?.data?.data?.restaurant || [];
       setRestaurants(Array.isArray(list) ? list.filter(Boolean) : []);
+      setMenuCount(menuCountRes?.data?.data?.count ?? 0);
     } catch (err) {
       console.error("Dashboard error:", err);
       if (err?.response?.status === 401) {
@@ -80,7 +87,7 @@ export default function Dashboard() {
     },
     {
       label: "Total Menus",
-      value: "—",
+      value: menuCount,
       icon: UtensilsCrossed,
     },
   ];
