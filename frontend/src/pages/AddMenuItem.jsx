@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, UtensilsCrossed, IndianRupee, Tag } from "lucide-react";
@@ -12,6 +12,8 @@ import Input from "../components/ui/Input";
 export default function AddMenuItem() {
   const { menuId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const restaurantId = location.state?.restaurantId;
   const [owner, setOwner] = useState(null);
 
   const [form, setForm] = useState({
@@ -50,7 +52,11 @@ export default function AddMenuItem() {
         category: form.category,
       });
 
-      navigate(`/menu/${menuId}/items`);
+      if (restaurantId) {
+        navigate(`/manage/restaurant/${restaurantId}/menus`);
+      } else {
+        navigate(`/menu/${menuId}/items`);
+      }
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to add menu item");
     } finally {
@@ -62,11 +68,17 @@ export default function AddMenuItem() {
     <AdminLayout owner={owner}>
       <div className="max-w-2xl mx-auto">
         <button
-          onClick={() => navigate(`/menu/${menuId}/items`)}
+          onClick={() => {
+            if (restaurantId) {
+              navigate(`/manage/restaurant/${restaurantId}/menus`);
+            } else {
+              navigate(`/menu/${menuId}/items`);
+            }
+          }}
           className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Items
+          {restaurantId ? "Back to Menus" : "Back to Items"}
         </button>
 
         <motion.div
@@ -148,7 +160,13 @@ export default function AddMenuItem() {
                   type="button"
                   variant="secondary"
                   className="flex-1"
-                  onClick={() => navigate(`/menu/${menuId}/items`)}
+                  onClick={() => {
+                    if (restaurantId) {
+                      navigate(`/manage/restaurant/${restaurantId}/menus`);
+                    } else {
+                      navigate(`/menu/${menuId}/items`);
+                    }
+                  }}
                 >
                   Cancel
                 </Button>

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -25,6 +25,8 @@ import EmptyState from "../components/ui/EmptyState";
 export default function ManageMenuItems() {
   const { menuId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const restaurantId = location.state?.restaurantId;
   const [owner, setOwner] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,11 +68,17 @@ export default function ManageMenuItems() {
     <AdminLayout owner={owner}>
       <div className="max-w-4xl mx-auto">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            if (restaurantId) {
+              navigate(`/manage/restaurant/${restaurantId}/menus`);
+            } else {
+              navigate(-1);
+            }
+          }}
           className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {restaurantId ? "Back to Menus" : "Back"}
         </button>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -83,7 +91,13 @@ export default function ManageMenuItems() {
             </p>
           </div>
 
-          <Button onClick={() => navigate(`/menu/${menuId}/items/add`)}>
+          <Button
+            onClick={() =>
+              navigate(`/menu/${menuId}/items/add`, {
+                state: { restaurantId },
+              })
+            }
+          >
             <PlusCircle className="w-4 h-4" />
             Add Item
           </Button>
@@ -106,7 +120,11 @@ export default function ManageMenuItems() {
               title="No items added yet"
               description="Add your first menu item to start building your menu."
               actionLabel="Add Item"
-              onAction={() => navigate(`/menu/${menuId}/items/add`)}
+              onAction={() =>
+                navigate(`/menu/${menuId}/items/add`, {
+                  state: { restaurantId },
+                })
+              }
               icon={UtensilsCrossed}
             />
           </Card>

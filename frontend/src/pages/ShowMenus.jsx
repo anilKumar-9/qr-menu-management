@@ -192,7 +192,11 @@ export default function ShowMenus() {
                       <Button
                         variant="primary"
                         size="sm"
-                        onClick={() => navigate(`/menu/${menu._id}/items`)}
+                        onClick={() =>
+                          navigate(`/menu/${menu._id}/items`, {
+                            state: { restaurantId },
+                          })
+                        }
                       >
                         Manage Items
                       </Button>
