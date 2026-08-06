@@ -1,0 +1,9 @@
+.env
+.env.local
+.env.development
+.env.production
+!.env.example
+
+node_modules
+app.log
+dist
