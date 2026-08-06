@@ -10,13 +10,15 @@ export default function Button({
 }) {
   const variants = {
     primary:
-      "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/20",
+      "bg-gray-900 text-white hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 shadow-sm",
     secondary:
-      "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300",
-    danger: "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-500/20",
-    ghost: "text-gray-600 hover:bg-gray-100",
+      "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700",
+    danger:
+      "bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 shadow-sm",
+    ghost:
+      "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
     outline:
-      "border border-indigo-600 text-indigo-600 hover:bg-indigo-50",
+      "border border-gray-900 text-gray-900 hover:bg-gray-100 dark:border-white dark:text-white dark:hover:bg-gray-800",
   };
 
   const sizes = {

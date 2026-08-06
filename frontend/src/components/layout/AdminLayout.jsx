@@ -10,6 +10,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { logoutOwner } from "../../api/auth.api";
+import ThemeToggle from "../ui/ThemeToggle";
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
@@ -34,14 +35,14 @@ export default function AdminLayout({ children, owner }) {
   const SidebarContent = (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-gray-800">
+      <div className="px-6 py-6 border-b border-gray-200 dark:border-gray-700">
         <Link to="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <QrCode className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-gray-900 dark:bg-white rounded-xl flex items-center justify-center shadow-sm">
+            <QrCode className="w-5 h-5 text-white dark:text-gray-900" />
           </div>
           <div>
-            <p className="font-bold text-white text-lg leading-tight">QR Menu</p>
-            <p className="text-xs text-gray-400">Admin Panel</p>
+            <p className="font-bold text-gray-900 dark:text-white text-lg leading-tight">QR Menu</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
           </div>
         </Link>
       </div>
@@ -54,8 +55,8 @@ export default function AdminLayout({ children, owner }) {
             to={item.path}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
               isActive(item.path)
-                ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white border border-indigo-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
             }`}
           >
             <item.icon className="w-5 h-5" />
@@ -66,21 +67,21 @@ export default function AdminLayout({ children, owner }) {
       </nav>
 
       {/* User */}
-      <div className="px-4 py-6 border-t border-gray-800">
+      <div className="px-4 py-6 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3 px-2 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+          <div className="w-10 h-10 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center text-white dark:text-gray-900 font-bold">
             {owner?.ownername?.charAt(0)?.toUpperCase() || "U"}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-white truncate">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
               {owner?.ownername}
             </p>
-            <p className="text-xs text-gray-400 truncate">{owner?.email}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{owner?.email}</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           Logout
@@ -90,9 +91,9 @@ export default function AdminLayout({ children, owner }) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block fixed inset-y-0 left-0 w-72 bg-gray-900 z-40">
+      <aside className="hidden lg:block fixed inset-y-0 left-0 w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-40">
         {SidebarContent}
       </aside>
 
@@ -103,10 +104,10 @@ export default function AdminLayout({ children, owner }) {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="absolute inset-y-0 left-0 w-72 bg-gray-900">
+          <aside className="absolute inset-y-0 left-0 w-72 bg-white dark:bg-gray-900">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+              className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             >
               <X className="w-6 h-6" />
             </button>
@@ -118,19 +119,22 @@ export default function AdminLayout({ children, owner }) {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Mobile Header */}
-        <header className="lg:hidden sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <header className="lg:hidden sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <QrCode className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center">
+              <QrCode className="w-4 h-4 text-white dark:text-gray-900" />
             </div>
-            <span className="font-bold">QR Menu</span>
+            <span className="font-bold text-gray-900 dark:text-white">QR Menu</span>
           </Link>
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
         </header>
 
         <main className="p-4 md:p-8">{children}</main>

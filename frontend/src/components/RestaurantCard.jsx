@@ -7,8 +7,6 @@ import Badge from "./ui/Badge";
 import Button from "./ui/Button";
 
 export default function RestaurantCard({ restaurant, onDelete }) {
-  if (!restaurant) return null;
-
   const navigate = useNavigate();
   const [qr, setQr] = useState("");
   const [loadingQR, setLoadingQR] = useState(true);
@@ -32,6 +30,8 @@ export default function RestaurantCard({ restaurant, onDelete }) {
     fetchQR();
   }, [restaurant?._id]);
 
+  if (!restaurant) return null;
+
   const downloadQRAsPDF = () => {
     if (!qr) return;
 
@@ -54,19 +54,19 @@ export default function RestaurantCard({ restaurant, onDelete }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-shadow overflow-hidden">
       {/* Header */}
-      <div className="p-5 border-b border-gray-100">
+      <div className="p-5 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0">
+            <div className="w-12 h-12 bg-gray-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-gray-900 font-bold text-lg shrink-0">
               {restaurant.name?.charAt(0)?.toUpperCase()}
             </div>
             <div className="min-w-0">
-              <h3 className="font-bold text-gray-900 truncate">
+              <h3 className="font-bold text-gray-900 dark:text-white truncate">
                 {restaurant.name}
               </h3>
-              <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+              <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 <MapPin className="w-3 h-3" />
                 <span className="truncate">{restaurant.address}</span>
               </div>
@@ -78,7 +78,7 @@ export default function RestaurantCard({ restaurant, onDelete }) {
         </div>
 
         {restaurant.contactNumber && (
-          <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-3">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mt-3">
             <Phone className="w-3 h-3" />
             {restaurant.contactNumber}
           </div>
@@ -86,17 +86,17 @@ export default function RestaurantCard({ restaurant, onDelete }) {
       </div>
 
       {/* QR Code */}
-      <div className="p-5 bg-gray-50/50">
-        <div className="h-44 flex items-center justify-center bg-white rounded-xl border border-gray-100">
+      <div className="p-5 bg-gray-50 dark:bg-gray-800/50">
+        <div className="h-44 flex items-center justify-center bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700">
           {loadingQR ? (
             <div className="text-center">
-              <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs text-gray-400 mt-2">Loading QR...</p>
+              <div className="w-8 h-8 border-2 border-gray-900 dark:border-white border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Loading QR...</p>
             </div>
           ) : qr ? (
             <img src={qr} alt="QR" className="w-36 h-36 object-contain" />
           ) : (
-            <div className="text-center text-gray-400">
+            <div className="text-center text-gray-400 dark:text-gray-500">
               <QrCode className="w-10 h-10 mx-auto mb-2" />
               <p className="text-xs">QR not available</p>
             </div>

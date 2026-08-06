@@ -63,7 +63,7 @@ export default function AddMenuItem() {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => navigate(`/menu/${menuId}/items`)}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-6"
+          className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Items
@@ -75,17 +75,17 @@ export default function AddMenuItem() {
         >
           <Card className="p-6 md:p-8">
             <div className="mb-8 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/20">
-                <UtensilsCrossed className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gray-900 dark:bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <UtensilsCrossed className="w-8 h-8 text-white dark:text-gray-900" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">Add Menu Item</h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Add Menu Item</h1>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                 Add a new item to your menu
               </p>
             </div>
 
             {error && (
-              <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
+              <div className="mb-6 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
                 {error}
               </div>
             )}
@@ -103,7 +103,7 @@ export default function AddMenuItem() {
               />
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -113,7 +113,7 @@ export default function AddMenuItem() {
                   required
                   rows={3}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400/30 focus:border-gray-500 dark:focus:ring-gray-500/30 dark:focus:border-gray-400 transition-all"
                 />
               </div>
 

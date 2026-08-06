@@ -91,7 +91,7 @@ export default function ShowMenus() {
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-6"
+          className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
@@ -99,8 +99,8 @@ export default function ShowMenus() {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Menus</h1>
-            <p className="text-gray-500 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Menus</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
               Manage your restaurant menus
             </p>
           </div>
@@ -153,11 +153,11 @@ export default function ShowMenus() {
                 <Card className="p-5 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 min-w-0">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shrink-0">
-                        <UtensilsCrossed className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gray-900 dark:bg-white rounded-xl flex items-center justify-center shrink-0">
+                        <UtensilsCrossed className="w-6 h-6 text-white dark:text-gray-900" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-bold text-gray-900 truncate">
+                        <h3 className="font-bold text-gray-900 dark:text-white truncate">
                           {menu.title}
                         </h3>
                         <div className="flex items-center gap-2 mt-1">

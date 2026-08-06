@@ -53,7 +53,7 @@ export default function CreateMenu() {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => navigate(`/manage/restaurant/${restaurantId}/menus`)}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-6"
+          className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Menus
@@ -65,17 +65,17 @@ export default function CreateMenu() {
         >
           <Card className="p-6 md:p-8">
             <div className="mb-8 text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/20">
-                <UtensilsCrossed className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gray-900 dark:bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <UtensilsCrossed className="w-8 h-8 text-white dark:text-gray-900" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">Create Menu</h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create Menu</h1>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                 Add a new menu for your restaurant
               </p>
             </div>
 
             {error && (
-              <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
+              <div className="mb-6 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
                 {error}
               </div>
             )}

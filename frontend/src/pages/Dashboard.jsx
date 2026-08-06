@@ -1,24 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  Store,
-  PlusCircle,
-  UtensilsCrossed,
-  QrCode,
-  ArrowRight,
-  MapPin,
-  Phone,
-} from "lucide-react";
-import { getMe, logoutOwner } from "../api/auth.api";
+import { Store, PlusCircle, UtensilsCrossed, QrCode } from "lucide-react";
+import { getMe } from "../api/auth.api";
 import { getRestaurants, deleteRestaurant } from "../api/restaurant.api";
 import AdminLayout from "../components/layout/AdminLayout";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import EmptyState from "../components/ui/EmptyState";
 import RestaurantCard from "../components/RestaurantCard";
+import ThemeToggle from "../components/ui/ThemeToggle";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -56,7 +48,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <LoadingSpinner text="Loading dashboard..." />
       </div>
     );
@@ -64,7 +56,7 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
           <Button onClick={fetchData} variant="secondary">
@@ -80,32 +72,32 @@ export default function Dashboard() {
       label: "Total Restaurants",
       value: restaurants.length,
       icon: Store,
-      gradient: "from-indigo-500 to-purple-600",
     },
     {
       label: "Active Restaurants",
       value: restaurants.filter((r) => r.isActive).length,
       icon: QrCode,
-      gradient: "from-green-500 to-emerald-600",
     },
     {
       label: "Total Menus",
       value: "—",
       icon: UtensilsCrossed,
-      gradient: "from-orange-500 to-red-600",
     },
   ];
 
   return (
     <AdminLayout owner={owner}>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Welcome back, {owner?.ownername || "Owner"} 👋
-        </h1>
-        <p className="text-gray-500 mt-1">
-          Manage your restaurants and QR menus from one place.
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            Welcome back, {owner?.ownername || "Owner"} 👋
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Manage your restaurants and QR menus from one place.
+          </p>
+        </div>
+        <ThemeToggle className="self-start sm:self-center" />
       </div>
 
       {/* Stats Grid */}
@@ -118,14 +110,16 @@ export default function Dashboard() {
             transition={{ delay: i * 0.1 }}
           >
             <Card className="p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-              <div
-                className={`w-12 h-12 bg-gradient-to-br ${stat.gradient} rounded-xl flex items-center justify-center shadow-lg`}
-              >
-                <stat.icon className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gray-900 dark:bg-white rounded-xl flex items-center justify-center shadow-sm">
+                <stat.icon className="w-6 h-6 text-white dark:text-gray-900" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-sm text-gray-500">{stat.label}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {stat.value}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {stat.label}
+                </p>
               </div>
             </Card>
           </motion.div>
@@ -142,8 +136,10 @@ export default function Dashboard() {
 
       {/* Restaurants */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Your Restaurants</h2>
-        <span className="text-sm text-gray-500">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          Your Restaurants
+        </h2>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {restaurants.length} total
         </span>
       </div>
@@ -170,14 +166,21 @@ export default function Dashboard() {
               <RestaurantCard
                 restaurant={r}
                 onDelete={async (restaurantId) => {
-                  if (!window.confirm('Delete this restaurant? This will disable it and remove it from your list.')) return;
+                  if (
+                    !window.confirm(
+                      "Delete this restaurant? This will disable it and remove it from your list.",
+                    )
+                  )
+                    return;
 
                   try {
                     await deleteRestaurant(restaurantId);
-                    setRestaurants((prev) => prev.filter((rest) => rest._id !== restaurantId));
+                    setRestaurants((prev) =>
+                      prev.filter((rest) => rest._id !== restaurantId),
+                    );
                   } catch (err) {
-                    console.error('Delete restaurant error:', err);
-                    setError('Failed to delete restaurant');
+                    console.error("Delete restaurant error:", err);
+                    setError("Failed to delete restaurant");
                   }
                 }}
               />

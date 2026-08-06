@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }) {
       try {
         await getMe();
         setIsAuthenticated(true);
-      } catch (err) {
+      } catch {
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <LoadingSpinner text="Checking authentication..." />
       </div>
     );
