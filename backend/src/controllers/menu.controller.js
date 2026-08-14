@@ -197,6 +197,28 @@ const getMenus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, menus, 'Menus fetched successfully'));
 });
 
+const getMenuCount = asyncHandler(async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find({ owner: req.user.id }).select(
+      '_id',
+    );
+    const restaurantIds = restaurants.map((restaurant) => restaurant._id);
+
+    const count = restaurantIds.length
+      ? await Menu.countDocuments({ restaurantId: { $in: restaurantIds } })
+      : 0;
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { count }, 'Menu count fetched successfully'));
+  } catch (err) {
+    console.error('Menu count error:', err);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { count: 0 }, 'Menu count unavailable'));
+  }
+});
+
 const getMenuById = asyncHandler(async (req, res) => {
   const { menuId } = req.params;
 
@@ -231,5 +253,6 @@ export {
   unPublishMenu,
   deleteMenu,
   getMenus,
-  getMenuById
+  getMenuCount,
+  getMenuById,
 };

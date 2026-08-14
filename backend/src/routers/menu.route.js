@@ -10,6 +10,7 @@ import {
   unPublishMenu,
   deleteMenu,
   getMenus,
+  getMenuCount,
   getMenuById,
 } from '../controllers/menu.controller.js';
 
@@ -28,6 +29,7 @@ menuRouter.get(
   accessTokenVerify,
   getMenus,
 );
+menuRouter.get('/count', accessTokenVerify, getMenuCount);
 menuRouter.get('/:menuId', accessTokenVerify, getMenuById);
 menuRouter.delete('/:menuId', accessTokenVerify, deleteMenu);
 menuRouter.patch("/:menuId/activate", accessTokenVerify, activateMenu)

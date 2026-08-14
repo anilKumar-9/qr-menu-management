@@ -10,15 +10,15 @@ export default function Button({
 }) {
   const variants = {
     primary:
-      "bg-gray-900 text-white hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 shadow-sm",
+      "bg-gradient-to-r from-primary-600 to-primary-500 text-white hover:from-primary-700 hover:to-primary-600 shadow-md hover:shadow-lg dark:shadow-primary-900/20 active:scale-95",
     secondary:
-      "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700",
+      "bg-white text-gray-800 border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 active:scale-95",
     danger:
-      "bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 shadow-sm",
+      "bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 shadow-md active:scale-95",
     ghost:
-      "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
+      "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10 active:scale-95",
     outline:
-      "border border-gray-900 text-gray-900 hover:bg-gray-100 dark:border-white dark:text-white dark:hover:bg-gray-800",
+      "border-2 border-primary-500 text-primary-600 hover:bg-primary-50 dark:border-primary-400 dark:text-primary-300 dark:hover:bg-primary-950/50 active:scale-95",
   };
 
   const sizes = {

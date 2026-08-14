@@ -4,71 +4,78 @@ import asyncHandler from '../utils/async-handler.js';
 import Restaurant from '../models/restaurant.model.js';
 import { generateRestaurantQR } from '../utils/qr.js';
 
-const createRestaurant = asyncHandler(async (req,res)=>{
-    const {name,contactNumber,address}=req.body;
+const getFrontendUrl = (req) => {
+  const origin = req.get('origin');
+  const envUrl = process.env.FRONTEND_URL;
+  return origin || envUrl;
+};
 
-    const exists= await Restaurant.findOne({
-        name,
-        owner:req.user.id,
-    })
+const createRestaurant = asyncHandler(async (req, res) => {
+  const { name, contactNumber, address } = req.body;
 
-    if (exists) {
-        throw new ApiError(409, 'Restaurant already exists');
-    }
+  const exists = await Restaurant.findOne({
+    name,
+    owner: req.user.id,
+  })
 
-    const createdRestaurant=await Restaurant.create({
-        owner:req.user.id,
-        name,
-        address,
-        contactNumber,
-        isActive:true
-    })
-    const qrCode = await generateRestaurantQR(createdRestaurant._id.toString());
-    createdRestaurant.qrCode = qrCode;
-    await createdRestaurant.save({ validateBeforeSave: false });
+  if (exists) {
+    throw new ApiError(409, 'Restaurant already exists');
+  }
 
-    res.status(201).json(new ApiResponse(201,createdRestaurant,"created sucessfully"))
+  const createdRestaurant = await Restaurant.create({
+    owner: req.user.id,
+    name,
+    address,
+    contactNumber,
+    isActive: true
+  })
+  const frontendUrl = getFrontendUrl(req);
+  const qrCode = await generateRestaurantQR(createdRestaurant._id.toString(), frontendUrl);
+  createdRestaurant.qrCode = qrCode;
+  await createdRestaurant.save({ validateBeforeSave: false });
+
+  res.status(201).json(new ApiResponse(201, createdRestaurant, "created sucessfully"))
 })
 
 
- const getRestaurants = asyncHandler(async(req,res)=>{
+const getRestaurants = asyncHandler(async (req, res) => {
 
-    const ownerId = req.user.id;
-    if (!ownerId) {
-      throw new ApiError(400, 'Invalid restaurant id');
-    }
+  const ownerId = req.user.id;
+  if (!ownerId) {
+    throw new ApiError(400, 'Invalid restaurant id');
+  }
 
-    const restaurant = await Restaurant.find({
-      owner: ownerId,
-      isActive:true
-    });
+  const restaurant = await Restaurant.find({
+    owner: ownerId,
+    isActive: true
+  });
 
-    res.status(200).json(new ApiResponse(200,{restaurant},"restaurant fetched sucessfully"));
- })
+  res.status(200).json(new ApiResponse(200, { restaurant }, "restaurant fetched sucessfully"));
+})
 
 
 const getRestaurantById = asyncHandler(async (req, res) => {
-   const { restaurantId } = req.params;
+  const { restaurantId } = req.params;
 
-   if (!restaurantId) {
-     throw new ApiError(400, 'Restaurant ID is required');
-   }
+  if (!restaurantId) {
+    throw new ApiError(400, 'Restaurant ID is required');
+  }
 
-   const restaurant = await Restaurant.findOne({
-     _id: restaurantId,
-     owner: req.user.id,
-     isActive:true
-   });
+  const restaurant = await Restaurant.findOne({
+    _id: restaurantId,
+    owner: req.user.id,
+    isActive: true
+  });
 
-   if (!restaurant) {
-     throw new ApiError(404, 'Restaurant not found');
-   }
+  if (!restaurant) {
+    throw new ApiError(404, 'Restaurant not found');
+  }
 
 
-   res
-     .status(200)
-     .json(new ApiResponse(200, restaurant, 'Restaurant fetched successfully'));
- });
+  res
+    .status(200)
+    .json(new ApiResponse(200, restaurant, 'Restaurant fetched successfully'));
+});
 
 const updateRestaurant = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
@@ -111,16 +118,16 @@ const softDeleteRestaurant = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findOne({
     _id: restaurantId,
     owner: req.user.id,
-    isActive:true
+    isActive: true
   });
 
   if (!restaurant) {
     throw new ApiError(404, 'restaurant not found');
   }
 
-   restaurant.isActive = false;
+  restaurant.isActive = false;
 
-   await restaurant.save({ validateBeforeSave: false });
+  await restaurant.save({ validateBeforeSave: false });
 
   res
     .status(200)
@@ -137,7 +144,7 @@ const activateRestaurant = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findOne({
     _id: restaurantId,
     owner: req.user.id,
-    isActive:false
+    isActive: false
   });
 
   if (!restaurant) {
@@ -167,7 +174,8 @@ const getRestaurantQR = asyncHandler(async (req, res) => {
   }
 
   if (!restaurant.qrCode) {
-    const qrCode = await generateRestaurantQR(restaurant._id.toString());
+    const frontendUrl = getFrontendUrl(req);
+    const qrCode = await generateRestaurantQR(restaurant._id.toString(), frontendUrl);
     restaurant.qrCode = qrCode;
     await restaurant.save({ validateBeforeSave: false });
   }
