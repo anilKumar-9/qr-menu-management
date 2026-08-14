@@ -48,8 +48,8 @@ export default function OwnerLogin() {
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4 sm:p-8 overflow-hidden bg-gray-50 dark:bg-gray-950">
       {/* Dynamic Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-400/30 dark:bg-primary-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400/30 dark:bg-blue-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gray-300/40 dark:bg-gray-800/40 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gray-400/20 dark:bg-gray-700/30 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
 
       <div className="w-full max-w-[1000px] grid lg:grid-cols-2 gap-8 lg:gap-0 items-center relative z-10">
         
@@ -60,12 +60,12 @@ export default function OwnerLogin() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="hidden lg:flex flex-col justify-center pr-12"
         >
-          <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary-500/30">
-            <QrCode className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-black dark:from-gray-200 dark:to-white rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-gray-900/20 dark:shadow-white/10">
+            <QrCode className="w-8 h-8 text-white dark:text-gray-900" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-4 tracking-tight">
             Manage your <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-blue-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-black dark:from-gray-300 dark:to-white">
               restaurant menus
             </span><br/>
             effortlessly.
@@ -95,8 +95,8 @@ export default function OwnerLogin() {
 
           <Card className="p-8 sm:p-10 border-white/40 dark:border-gray-800/60 shadow-2xl shadow-gray-200/50 dark:shadow-black/50">
             <div className="mb-8 lg:hidden text-center">
-              <div className="w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary-500/30">
-                <QrCode className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 bg-gradient-to-br from-gray-800 to-black dark:from-gray-200 dark:to-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-gray-900/20 dark:shadow-white/10">
+                <QrCode className="w-7 h-7 text-white dark:text-gray-900" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h2>
             </div>

@@ -8,7 +8,6 @@ const ownerSchema = mongoose.Schema(
     ownername: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       index: true,
       lowercase: true,

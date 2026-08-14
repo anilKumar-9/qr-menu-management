@@ -54,13 +54,13 @@ export default function Home() {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => navigate(`/menu/${demoRestaurantId}`)}
-                className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-lg font-semibold"
+                className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 text-white dark:text-gray-900 px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 active:translate-y-0"
               >
                 View Demo
               </button>
               <Link
                 to="/register"
-                className="border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-lg"
+                className="border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800/50 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0"
               >
                 Register
               </Link>
